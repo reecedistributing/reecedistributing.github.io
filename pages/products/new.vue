@@ -4,23 +4,35 @@ v-container
     v-flex(md6, offset-md3)
       ProductForm(
         label="New Product",
-        :categories="categories"
+        :categories="categories",
+        :brands="brands"
       )
 
 </template>
 
 
 <script>
+  import {
+    mapState
+  } from 'vuex'
+  
   import ProductForm from '~/components/products/Form.vue'
 
   export default {
     data: _ => ({
-      categories: []
     }),
     async asyncData ({store}) {
-      let categories = await store.dispatch('categories/getRootCategories')
+      let categories = await store.dispatch('categories/getAllRoot')
+      let brands = await store.dispatch('brands/getAllRoot')
       return {
-        categories
+      }
+    },
+    computed: {
+      categories () {
+        return this.$store.state.categories.allRoot
+      },
+      brands () {
+        return this.$store.state.brands.allRoot
       }
     },
     components: {

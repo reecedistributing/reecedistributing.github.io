@@ -24,27 +24,39 @@ v-flex
             label="Name", 
             v-model="value.name", 
             :counter="10", 
-            required=""
+            required
           )
           v-text-field(
             label="Description", 
             v-model="value.description", 
-            required=""
+            required
             multi-line
           )
-          v-select(
-            v-model="value.brands", 
-            label="Brands", 
-            chips, 
-            tags, 
-            :items="brands"
-          )
-          deep-select(
-            label="Categories", 
-            v-model="value.categories", 
-            :items="categories",
-            @create="createCategory"
-          )
+          v-layout.elevation-0.transparent
+            v-tooltip(top, right)
+              v-btn(center, dark, fab, flat, small, color="accent", slot="activator"
+                @click="createBrand({})"
+              )
+                v-icon add
+              span Create New Brand
+            deep-select(
+              label="Brands", 
+              v-model="value.brands", 
+              :items="brands",
+            )
+          v-layout.elevation-0.transparent
+            v-tooltip(top, right)
+              v-btn(
+                center, dark, fab, flat, small, color="accent", slot="activator"
+                @click="createCategory({})"
+              )
+                v-icon add
+              span Create New Category
+            deep-select(
+              label="Categories", 
+              v-model="value.categories", 
+              :items="categories",
+            )
           v-text-field(
             label="Minimum Price"
             v-model="value.price_low"
@@ -63,11 +75,14 @@ v-flex
             @success="handleSuccessfulUpload"
           )
           
-        v-dialog(v-model="categoryFormVisible")
+        v-dialog(v-model="categoryFormVisible", max-width="50%")
           v-card 
             v-card-text
-              new-category(:categories="categories")
-
+              new-category(v-model="newCategory")
+        v-dialog(v-model="brandFormVisible", max-width="50%")
+          v-card 
+            v-card-text
+              new-brand(v-model="newBrand")
 
 </template>
 
@@ -75,27 +90,37 @@ v-flex
   import ImageUpload from '~/components/inputs/ImageUpload.vue'
   import DeepSelect from '~/components/inputs/DeepSelect.vue'
   import NewCategory from '~/components/categories/New.vue'
+  import NewBrand from '~/components/brands/New.vue'
+
   // setup to support v-model
   // enter initial product as v-model
   export default {
 
     data: _ => ({
         categoryFormVisible: false,
+        brandFormVisible: false,
         options: {
           url: '/upload',
           paramName: 'file'
         },
-        brands: [
-          'Nike',
-          'Underarmour',
-          'Samsung',
-          'Apple',
-          'Cummins'
-        ],
-        thumbs: []
+        thumbs: [],
+        newCategory: {
+          name: '',
+          description: '',
+          parent: null
+        },
+        newBrand: {
+          name: '',
+          description: '',
+          parent: null
+        }
     }),
 
     props: {
+      brands: {
+        type: Array,
+        required: true
+      },
       categories: {
         type: Array,
         required: true
@@ -130,9 +155,17 @@ v-flex
     },
     
     methods: {
-      
-      createCategory ({name}) {
+      addBrand ({ name, description, parent }) {
+
+      },
+      createCategory ({name = '', description = '', parent = null}) {
+        this.newCategory = { name, description, parent };
         this.categoryFormVisible = true
+      },
+
+      createBrand ({name = '', description = '', parent = null}) {
+        this.newBrand = { name, description, parent };
+        this.brandFormVisible = true
       },
 
       handleSuccessfulUpload (cloudinary_res) {
@@ -162,7 +195,8 @@ v-flex
     components: {
       ImageUpload,
       DeepSelect,
-      NewCategory
+      NewCategory,
+      NewBrand
     }
   }
 
@@ -170,5 +204,7 @@ v-flex
 
 
 <style lang="scss">
-
+  .relative {
+    position: relative;
+  }
 </style>

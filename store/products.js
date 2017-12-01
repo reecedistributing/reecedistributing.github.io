@@ -14,10 +14,13 @@ export default {
 
   actions: {
 
-    async getProducts (state, {size, num, search}) {
+    async getProducts (state, {size, num, search, orderBy}) {
       let searchArg = search ? `search: "${search}"` : ''
       let { data: { productPage: { products, pagination } } } = await query`{
-          productPage(size: ${size}, num: ${num}, ${searchArg}) {
+          productPage(size: ${size}, num: ${num}, ${searchArg}, orderBy: {
+            ascending: ${!!orderBy.ascending}
+            attribute: "${orderBy.attribute || 'updated_at'}"
+          }) {
             products {
               name
               description

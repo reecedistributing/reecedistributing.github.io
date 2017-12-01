@@ -3,13 +3,15 @@ import PRODUCTS from './products'
 import NOTIFICATIONS from './notifications'
 import IMAGES from './images'
 import CATEGORIES from './categories'
+import BRANDS from './brands'
 
 let store = {
   modules: {
     products: PRODUCTS,
     notifications: NOTIFICATIONS,
     images: IMAGES,
-    categories: CATEGORIES
+    categories: CATEGORIES,
+    brands: BRANDS
   }
 }
 

@@ -2,15 +2,22 @@
 <template lang="pug">
   v-select(
     @input="updateValue",
-    label="Categories", 
-    chips, 
+    :label="label",
+    :value="value"
+    chips,
     :items="items",
     item-text="name"
     :multiple="multiple",
-    autocomplete
   )
-    template(slot="selection", scope="data")
-        v-menu(open-on-hover, top, right, offset-x)
+    //- template(slot="item", scope="data")
+    //-   v-list-tile-avatar
+    //-     v-checkbox(v-model="data.item.selected")
+    //-   v-list-tile-content
+    //-     v-list-tile-title 
+    //-       span {{data.item.name}}
+    //-     v-list-tile-sub-title {{data.item.description}}
+    template(slot="selection", scope="data").elevation-0
+        v-menu(open-on-hover, top, right, offset-y).elevation-0
           v-chip.chip--select-multi(
             slot="activator" 
             @input="data.parent.selectItem(data.item)", 
@@ -22,17 +29,11 @@
           //-   v-icon arrow_drop_down
           //- v-list
           //-   v-list-tile
-          v-tooltip(right)
-            v-btn(flat, color="green", slot="activator").white--text
-              v-icon playlist_add
-            span add sub-category
-    //- template(slot="item", scope="data")
-    //-   v-list-tile-avatar
-    //-     v-checkbox(v-model="data.item.selected")
-    //-   v-list-tile-content
-    //-     v-list-tile-title 
-    //-       span {{data.item.name}}
-    //-     v-list-tile-sub-title {{data.item.description}}
+          //- template
+          //-   v-tooltip(right)
+          //-     v-btn(color="green", slot="activator").white--text
+          //-       v-icon playlist_add
+          //-     span add sub-{{label.toLowerCase()}}
 </template>
 
 
@@ -62,25 +63,7 @@
     methods: {
       log: _ => console.log(_),
       updateValue (value) {
-        // this.value.forEach(
-        //   e => {
-        //     e.selected = false;
-        //   }
-        // );
-
-        let addedItem = null;
-
-        value = value.filter(
-          e => {
-            if ( typeof e == "string" ) {
-              addedItem = e;
-              return false;
-            }
-            e.selected = true;
-            return true;
-          }
-        );
-        addedItem? this.$emit('create', { name: addedItem }) : this.$emit('input', value)
+        this.$emit('input', value)
       }
     },
     components: {

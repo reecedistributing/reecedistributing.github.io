@@ -65,7 +65,14 @@ v-layout
         :id="key"
       )
         v-flex(xs10, offset-xs1, )
-          component(:is="val", :products="products", :loading="loading")
+          component(
+            :is="val", 
+            :products="products", 
+            :loading="loading", 
+            :initial_sort_attr="sortBy.attribute",
+            :initial_sort_ascending="sortBy.ascending"
+            @sort="updateRouteWithSortParams"
+          )
 
     //- PAGINATION
     v-container
@@ -89,6 +96,10 @@ v-layout
         products: [],
         pageCount: 1,
         pageNum: 1,
+        sortBy: {
+          attribute:'',
+          ascending: true
+        },
         views: {
           // name: ComponentName
           grid: 'ProductGrid',
@@ -98,18 +109,30 @@ v-layout
       }
     },
     async asyncData({store, query}){
-      let { page: pageNum = 1, view: activeView = 'grid', search = '' } = query;
+      let { 
+        page: pageNum = 1, 
+        view: activeView = 'grid', 
+        search = '',
+        sort_ascending: ascending = "true",
+        sort_attribute: attribute = 'updated_at'
+      } = query;
+      ascending = JSON.parse(ascending)
+      let sortBy = {
+        ascending,
+        attribute
+      }
       pageNum = parseInt(pageNum)
       let searchActive = !!search
       let size = 15
-      let { products, pagination: { pageCount } } = await store.dispatch('getProducts', { num: pageNum, size, search })
+      let { products, pagination: { pageCount } } = await store.dispatch('getProducts', { num: pageNum, size, search, orderBy: sortBy })
       return {
         products,
         pageCount,
         pageNum,
         activeView,
         search,
-        searchActive
+        searchActive,
+        sortBy
       }
     },
     computed: {
@@ -137,6 +160,9 @@ v-layout
         let page = this.pageNum;
         this.$router.push({ query:{ ...this.$route.query, page } })
       },
+      updateRouteWithSortParams ({ ascending: sort_ascending, attribute: sort_attribute }) {
+        this.$router.push({ query:{ ...this.$route.query, sort_ascending, sort_attribute } })
+      },
       switchView (viewName /* "grid" or "_table" */) {
         this.$router.push({ query:{ ...this.$route.query, view: viewName } })
       }
@@ -146,8 +172,6 @@ v-layout
         console.log('updated')
         this.updateRouteWithPageNumber()
       }
-    },
-    mounted(){
     },
     components: {
       ProductGrid,

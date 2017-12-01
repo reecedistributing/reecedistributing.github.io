@@ -24,3 +24,10 @@ export const query = (...args) => {
     query: gql(...args)
   })
 }
+
+export const mutate = (mutationTag, variables) => {
+  return client.mutate({
+    mutation: gql(mutationTag),
+    variables
+  })
+}

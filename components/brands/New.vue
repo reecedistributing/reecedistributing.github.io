@@ -1,16 +1,16 @@
 <template lang="pug">
   div
-    h4 New Category
-    category-form(@submit="onSubmit", :value="category")
+    h4 New Brand
+    brand-form(@submit="onSubmit", :value="brand")
 </template>
 
 
 <script>
-  import CategoryForm from './Form'
+  import BrandForm from './Form'
 
   export default {
     data: _ => ({
-      category:{
+      brand:{
         name:'',
         description:'',
         parent:null
@@ -32,29 +32,30 @@
       // Filters out each property and resorts to default value if not provided
       let {
         name: _name, description: _description, parent: _parent
-      } = this.category;
+      } = this.brand;
 
       let {
         name = _name, description = _description, parent = _parent
       } = this.template;
 
-      this.category = {
+      this.brand = {
         name, description, parent
       }
     },
     methods: {
       async onSubmit () {
-        let { name, description, parent } = this.category;
+        let { name, description, parent } = this.brand;
         let parent_slug = parent ? parent.slug : null;
-        let rtnCategory = await this.$store.dispatch('categories/create', { name, description, parent_slug })
-        this.onCreate(rtnCategory)
+        let rtnBrand = await this.$store.dispatch('brands/create', { name, description, parent_slug })
+        debugger
+        this.onCreate(rtnBrand)
       },
       onCreate (...args) {
         this.$emit('create', ...args)
       }
     },
     components: {
-      CategoryForm
+      BrandForm
     }
   }
 

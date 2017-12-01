@@ -3,11 +3,12 @@ v-layout(justify-center="")
   v-flex(xs12)
     v-card-title
       //- v-bind:pagination.sync="pagination"
+      //- v-bind:search="search",
       v-data-table.elevation-1(
         v-bind:headers="headers",
         v-bind:items="items", 
-        v-bind:search="search",
         :loading="loading"
+        v-bind:pagination.sync="pagination"
         hide-actions
       )
         template(slot="headerCell", scope="props")
@@ -28,9 +29,13 @@ v-layout(justify-center="")
 
   export default {
     data () {
+      let pagination = {
+        descending: !this.initial_sort_ascending,
+        sortBy: this.initial_sort_attr
+      }
       return {
         search: '',
-        pagination: {},
+        pagination,
         totalItems:0,
         selected: [],
         headers: [
@@ -46,7 +51,9 @@ v-layout(justify-center="")
     watch: {
       pagination: {
         handler () {
-          this.$emit('sort', this.pagination)
+          const { sortBy: attribute, descending, page, rowsPerPage } = this.pagination;
+          let sortParams = { attribute, ascending: !descending }
+          this.$emit('sort', sortParams)
         },
         deep: true
       }
@@ -69,6 +76,14 @@ v-layout(justify-center="")
         required: true
       },
       loading:{
+        type: Boolean,
+        required: true
+      },
+      initial_sort_attr: {
+        type: String,
+        required: true
+      },
+      initial_sort_ascending: {
         type: Boolean,
         required: true
       }

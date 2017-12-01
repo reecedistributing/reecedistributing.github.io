@@ -4,7 +4,7 @@
     @submit.prevent="onSubmit"
   )
     v-text-field(
-      label="Parent Category",
+      label="Parent Brand",
       v-model="value.parent"
       disabled
       v-if="value.parent"
@@ -46,6 +46,7 @@
 
     methods: {
       onSubmit (...args) {
+        args = args.length ? args : true
         this.$emit('submit', ...args)
       },
       updateInput () {
