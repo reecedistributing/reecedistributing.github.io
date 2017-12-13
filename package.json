@@ -4,6 +4,9 @@
   "description": "A client for the Reece Distributing Web Catalog",
   "author": "mccallofthewild <mccallalexander96@gmail.com>",
   "private": true,
+  "engines": {
+    "node": ">6 <8"
+  },
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",

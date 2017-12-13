@@ -1,13 +1,14 @@
 <template lang="pug">
-section.container
-  div
-    // <logo/>
-    h1.title
-      | Reece Distributing Co.
-    h2.subtitle
-      span For those who just can't bare it.
-    .links
-      nuxt-link.button--grey(:to="{ name:'products' }") View Catalog
+v-layout.bg
+  v-flex(xs12).overlay-bg
+    div.overlay-contents
+      // <logo/>
+      h1.title-txt
+        | Reece Distributing Co.
+      h2.subtitle
+        span For those who just can't bare it.
+      .links
+        v-btn(:nuxt="true", :to="{ name:'products' }", large) View Catalog
 
 </template>
 
@@ -21,29 +22,35 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
-.container {
-  min-height: 100vh;
+.bg {
+  position: relative;
+  background-image: url('https://source.unsplash.com/uOi3lg8fGl4');
+  background-size: cover;
+}
+.overlay-bg {
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
+
+  background-color: rgba(0,0,0,0.5);
 }
 
-h1.title {
+h1.title-txt {
   font-family: 'Great Vibes', cursive;
-  font-size: 7rem !important;
   display: block;
-  font-weight: bold;
-  /* letter-spacing: -2px; */
+  /* font-weight: bold; */
+  color:#FAFAFA;
+  letter-spacing: 0px !important;
 }
 
 .subtitle {
   font-family: 'Cutive Mono', Arial, Helvetica, sans-serif;
   font-weight: 300;
   font-size: 1.7em;
-  color: grey;
+  color: #FAFAFA;
   word-spacing: 5px;
   padding-bottom: 15px;
 }

@@ -1,7 +1,9 @@
-import { query } from './apollo-client'
+import { client } from './apollo-client'
+import { CREATE_PRODUCT } from './graphql/mutations'
+import { PRODUCT_BY_SLUG, PRODUCT_BY_PAGE } from './graphql/queries'
 
 export default {
-  // namespace: true,
+  namespaced: true,
   state () {
     return {
       info: 'INFO HERE'
@@ -14,27 +16,53 @@ export default {
 
   actions: {
 
-    async getProducts (state, {size, num, search, orderBy}) {
-      let searchArg = search ? `search: "${search}"` : ''
-      let { data: { productPage: { products, pagination } } } = await query`{
-          productPage(size: ${size}, num: ${num}, ${searchArg}, orderBy: {
-            ascending: ${!!orderBy.ascending}
-            attribute: "${orderBy.attribute || 'updated_at'}"
-          }) {
-            products {
-              name
-              description
-              price_high
-              price_low
-              slug
-              created_at
-              updated_at
-            }
-            pagination {
-              pageCount
-            }
+    async create ({ commit, dispatch, state }, { product: {
+      name,
+      description,
+      categories,
+      images,
+      brands
+    } }) {
+      categories = categories.map(
+        c => c.slug
+      )
+      images = images.map(
+        i => i.slug
+      )
+      brands = brands.map(
+        b => b.slug
+      )
+      let {
+        data: { product }
+      } = await client.mutate({
+        mutation: CREATE_PRODUCT,
+        variables: {
+          product: {
+            name,
+            description,
+            categories,
+            images,
+            brands
           }
-        }`
+        }
+      })
+      return product
+    },
+
+    async getProducts (state, { size, num, search, orderBy: { ascending = false, attribute = 'updated_at' } }) {
+      size = parseInt(size)
+      let { data: { productPage: { products, pagination } } } = await client.query({
+        query: PRODUCT_BY_PAGE,
+        variables: {
+          size,
+          num,
+          orderBy: {
+            ascending,
+            attribute
+          },
+          search
+        }
+      })
 
       products = products.map(
         (p, i) => {
@@ -50,14 +78,17 @@ export default {
       }
     },
 
-    async getProduct (state, {slug}) {
-      let { data: { product } } = await query`{
-        product: productBySlug(slug: "${slug}") {
-          name
-          description
-          slug
+    async getProduct (state, {slug, height = 900, width = 1080}) {
+      let { data: { product } } = await client.query({
+        query: PRODUCT_BY_SLUG,
+        variables: {
+          slug,
+          transform: {
+            width,
+            height
+          }
         }
-      }`
+      })
       return product
     }
   }

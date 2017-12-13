@@ -10,7 +10,7 @@ v-layout(row='')
       v-container(fluid='', grid-list-sm)
         v-layout(row='', wrap='')
           v-flex(xs4='', v-for='(i, index) in thumbs', :key="'key'+index")
-            img.image(v-bind:src='i', width='100%', height='100%')
+            img.image(v-bind:src='i', width='100%')
 
     v-card(transition="scale-transition", v-if="loading.active")
       v-card-media(
@@ -35,6 +35,7 @@ v-layout(row='')
       @formData="handleFormData"
       formDataAppendAttr="file"
       :disabled="loading.active"
+      :multiple="true"
     )
 </template>
 
@@ -95,8 +96,14 @@ v-layout(row='')
           1000
         );
       },
-      handleFormData (formDataArray) {
-        this.uploadFormData(formDataArray[0])
+      async handleFormData (formDataArray) {
+        let l = formDataArray.length;
+        let i = 0;
+        while (i<l) {
+          let formData = formDataArray[i]
+          await this.uploadFormData(formData)
+          i = i + 1
+        }
       },
       async uploadFormData (formData) {
         formData.append('upload_preset', this.cloudinary.uploadPreset);

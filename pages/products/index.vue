@@ -124,7 +124,7 @@ v-layout
       pageNum = parseInt(pageNum)
       let searchActive = !!search
       let size = 15
-      let { products, pagination: { pageCount } } = await store.dispatch('getProducts', { num: pageNum, size, search, orderBy: sortBy })
+      let { products, pagination: { pageCount } } = await store.dispatch('products/getProducts', { num: pageNum, size, search, orderBy: sortBy })
       return {
         products,
         pageCount,

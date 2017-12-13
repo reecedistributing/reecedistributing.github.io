@@ -1,7 +1,7 @@
 
 <template lang="pug">
   v-list
-    v-list-tile-content(v-for="item in items")
+    v-list-tile-content(v-for="item in items", :key="item.slug")
       v-tooltip(open-on-hover, right, offset-y)
         template()
           v-list-tile-title(v-html="item.name")

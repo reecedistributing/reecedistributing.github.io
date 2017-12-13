@@ -1,9 +1,11 @@
 
 
-- [] Create Nested, Dynamically creatable Categories and brands inputs with Vuetify Dialog
-- [] Complete "New Product" view
-  - [] Brands + Categories
+- [X] Create Nested, Dynamically creatable Categories and brands inputs with Vuetify Dialog
+- [X] Complete "New Product" view
+  - [X] Brands + Categories
     - [X] Get brands & categories to reload their entire queries every time
     - [X] Get categories to create
-    - [] Get images to create
-  - [] Require that min price is less than max price 
+    - [X] Get images to create
+  - [X] Require that min price is less than max price 
+
+  - [] Fix/complete search/filter mechanisms for products

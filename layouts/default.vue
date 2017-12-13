@@ -20,7 +20,7 @@
         flat 
         @click.native="snackbar[notif.id] = false"
       ) Close
-    v-toolbar.white.darken-2
+    v-toolbar.elevation-0
       nuxt-link.lowkey_link(:to="{ path:'/' }" tag="v-toolbar-title").grey--text.text--darken-2
         v-avatar
           img(src="~/assets/flame_logo.svg", style="filter:lighten(10%)")

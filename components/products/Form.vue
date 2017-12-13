@@ -18,7 +18,7 @@ v-flex
   v-card
     v-card-text
       v-flex
-        form
+        form(@submit.prevent="onSubmit")
           //- :error-messages="nameErrors", 
           v-text-field(
             label="Name", 
@@ -62,19 +62,34 @@ v-flex
             v-model="value.price_low"
             prefix="$"
             type="number"
+            min="0"
+            :max="value.price_high"
+            step="0.01"
+            :required="value.price_high != null"
+            @input="$v.minPrice.$touch()"
+            @blur="$v.minPrice.$touch()"
+            :error-messages="priceErrors.minPrice"
           )
           v-text-field(
             label="Maximum Price"
             v-model="value.price_high"
             prefix="$"
             type="number"
+            :min="value.price_low"
+            step="0.01"
+            :required="value.price_low != null"
+            @input="$v.maxPrice.$touch()"
+            @blur="$v.maxPrice.$touch()"
+            :error-messages="priceErrors.maxPrice"
           )
           image-upload(
             :thumbs="thumbs"
             :cloudinary="cloudinary"
             @success="handleSuccessfulUpload"
           )
-          
+          v-btn(
+            type="submit"
+          ).primary Submit          
         v-dialog(v-model="categoryFormVisible", max-width="50%")
           v-card 
             v-card-text
@@ -87,6 +102,8 @@ v-flex
 </template>
 
 <script>
+  import { validationMixin } from 'vuelidate'
+  import { required, minValue, maxValue, numeric, requiredIf } from 'vuelidate/lib/validators'
   import ImageUpload from '~/components/inputs/ImageUpload.vue'
   import DeepSelect from '~/components/inputs/DeepSelect.vue'
   import NewCategory from '~/components/categories/New.vue'
@@ -95,6 +112,25 @@ v-flex
   // setup to support v-model
   // enter initial product as v-model
   export default {
+
+    mixins: [validationMixin],
+
+    validations: {
+      minPrice: {
+        required: requiredIf(
+          nestedModel => {
+            return this.minOrMaxPriceEntered;
+          }
+        ),
+      },
+      maxPrice: { 
+        required: requiredIf(
+          nestedModel => {
+            return this.minOrMaxPriceEntered;
+          }
+        ),
+      },
+    },
 
     data: _ => ({
         categoryFormVisible: false,
@@ -149,12 +185,54 @@ v-flex
     computed: {
       cloudinary () {
         let config = this.$store.state.images.cloudinary.config
-        console.log(config)
         return config
+      },
+      minOrMaxPriceEntered () {
+        let price_low = this.value.price_low;
+        let price_high = this.value.price_high;
+        let areEqual = price_high == price_low;
+        let bothZero = areEqual && ( price_high == 0 );
+        let bothNull = areEqual && ( price_high == null );
+        let bothFalsey = (!!price_high && !!price_low) && (!!price_high == false);
+        let oneFalsey = (!!price_high) != (!!price_low)
+        if (bothFalsey) {
+          this.value.price_high = null;
+          this.value.price_low = null;
+        }
+        if (oneFalsey) {
+          switch (false) {
+            case !!price_high :
+              this.value.price_high = 0;
+              break;
+            case !!price_low :
+              this.value.price_low = 0;
+              break;
+          }
+        }
+        return !bothZero && !bothNull
+      },
+
+      priceErrors () {
+        const errors = {
+          minPrice: [],
+          maxPrice: []
+        }
+        if (!this.$v.maxPrice.$dirty && !this.$v.minPrice.$dirty) return errors
+
+        if ( this.minOrMaxPriceEntered && !(this.value.price_high > this.value.price_low) ) {
+         if (this.$v.maxPrice.$dirty) errors.maxPrice.push('Maximum Price must be greater than Minimum Price!')
+         if (this.$v.minPrice.$dirty) errors.minPrice.push('Minimum Price must be less than Maximum Price!')
+        }
+        return errors
       }
     },
     
     methods: {
+
+      onSubmit (event) {
+        this.$emit('complete', { event, product: this.value })
+      },
+      
       addBrand ({ name, description, parent }) {
 
       },
@@ -168,8 +246,14 @@ v-flex
         this.brandFormVisible = true
       },
 
-      handleSuccessfulUpload (cloudinary_res) {
-        this.thumbs.push(cloudinary_res.secure_url)
+      async handleSuccessfulUpload (cloudinary_res) {
+        let cl_secure_url = cloudinary_res.secure_url;
+        let cl_public_id = cloudinary_res.public_id;
+
+        let savedImage = await this.$store.dispatch('images/create', { cl_secure_url, cl_public_id, res_width: 100, res_height: 100 })
+        this.value.images.push(savedImage);
+        this.$emit('input', this.value)
+        this.thumbs.push(savedImage.url)
         this.notify();
       },
       notify () {
@@ -190,7 +274,7 @@ v-flex
     },
 
     mounted () {
-      process.browser
+      this.$emit('input', this.value)
     },
     components: {
       ImageUpload,
@@ -207,4 +291,4 @@ v-flex
   .relative {
     position: relative;
   }
-</style>
+</style>  

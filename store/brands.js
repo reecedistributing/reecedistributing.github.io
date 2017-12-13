@@ -12,7 +12,9 @@ export default {
   actions: {
 
     async create ({ commit, dispatch, state }, { name, description, parent_slug: parentSlug }) {
-      let { brand } = await client.mutate({
+      let {
+        data: { brand }
+      } = await client.mutate({
         mutation: CREATE_BRAND,
         variables: {
           brand: {

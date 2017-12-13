@@ -8,11 +8,20 @@ export default {
     allRoot: []
   }),
 
+  mutations: {
+
+    updateAllRoot (state, { data }) {
+      state.allRoot = data
+    }
+
+  },
+
   actions: {
 
     async create ({ commit, dispatch, state }, { name, description, parent_slug: parentSlug }) {
-      console.log(CREATE_CATEGORY)
-      let { category } = await client.mutate({
+      let {
+        data: { category }
+      } = await client.mutate({
         mutation: CREATE_CATEGORY,
         variables: {
           category: {
@@ -23,14 +32,23 @@ export default {
         },
         refetchQueries: [ { query: ALL_ROOT_CATEGORIES } ]
       })
-      if (!parentSlug) await dispatch('getAllRoot')
       return category
     },
-    async getAllRoot ({ state }) {
+
+    async getAllRoot ({ commit, dispatch, state }) {
+      console.log('getAllRoot running')
       let { data: { categories } } = await client.query({
-        query: ALL_ROOT_CATEGORIES
+        query: ALL_ROOT_CATEGORIES,
+        update: (store, { data: { categories } }) => {
+          console.log(categories)
+          commit('updateAllRoot', {
+            data: categories
+          })
+        }
       })
-      state.allRoot = categories
+      commit('updateAllRoot', {
+        data: categories
+      })
       return categories
     }
   }

@@ -8,6 +8,7 @@
     :items="items",
     item-text="name"
     :multiple="multiple",
+    autocomplete
   )
     //- template(slot="item", scope="data")
     //-   v-list-tile-avatar
@@ -17,14 +18,17 @@
     //-       span {{data.item.name}}
     //-     v-list-tile-sub-title {{data.item.description}}
     template(slot="selection", scope="data").elevation-0
-        v-menu(open-on-hover, top, right, offset-y).elevation-0
-          v-chip.chip--select-multi(
-            slot="activator" 
-            @input="data.parent.selectItem(data.item)", 
-            :disabled="data.disabled", 
-            :key="JSON.stringify(data.item)"
-          )
-            | {{ data.item.name }}
+      v-chip.chip--select-multi(close="", @input="data.parent.selectItem(data.item)", :selected="data.selected", :key="JSON.stringify(data.item)")
+        |                   {{ data.item.name }}
+
+        //- v-menu(open-on-hover, top, right, offset-y).elevation-0
+        //-   v-chip.chip--select-multi(
+        //-     slot="activator" 
+        //-     @input="data.parent.selectItem(data.item)", 
+        //-     :disabled="data.disabled", 
+        //-     :key="JSON.stringify(data.item)"
+        //-   )
+        //-     | {{ data.item.name }}
           //- v-btn(flat, icon, small, color="black", slot="activator")
           //-   v-icon arrow_drop_down
           //- v-list

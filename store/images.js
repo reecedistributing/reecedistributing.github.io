@@ -3,6 +3,7 @@
 import { client } from './apollo-client'
 import { CREATE_IMAGE } from './graphql/mutations'
 import { } from './graphql/queries'
+import { debug } from 'util';
 
 export const UPLOAD_PRESET = 'agswqxij'
 export const API_KEY = '761392187415866'
@@ -25,11 +26,16 @@ export default {
 
   actions: {
 
-    async create ({ commit, dispatch, state }, { cl_secure_url, cl_public_id, cl_cloud_name }) {
-      let { image } = await client.mutate({
+    async create ({ commit, dispatch, state }, { cl_secure_url, cl_public_id, res_width, res_height }) {
+      let cloudName = state.cloudinary.config.cloudName
+      let [ width, height ] = [ res_width.toString(), res_height.toString() ];
+      let {
+        data: { image }
+      } = await client.mutate({
         mutation: CREATE_IMAGE,
         variables: {
-          cloudinary: { cl_secure_url, cl_public_id, cl_cloud_name }
+          cloudinary: { cl_secure_url, cl_public_id, cl_cloud_name: cloudName },
+          transform: { width, height }
         }
       })
       return image
