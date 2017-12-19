@@ -113,7 +113,7 @@ v-layout
         page: pageNum = 1, 
         view: activeView = 'grid', 
         search = '',
-        sort_ascending: ascending = "true",
+        sort_ascending: ascending = "false",
         sort_attribute: attribute = 'updated_at'
       } = query;
       ascending = JSON.parse(ascending)

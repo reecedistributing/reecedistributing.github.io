@@ -1,5 +1,5 @@
 import { client } from './apollo-client'
-import { CREATE_PRODUCT } from './graphql/mutations'
+import { CREATE_PRODUCT, UPDATE_PRODUCT } from './graphql/mutations'
 import { PRODUCT_BY_SLUG, PRODUCT_BY_PAGE } from './graphql/queries'
 
 export default {
@@ -21,7 +21,9 @@ export default {
       description,
       categories,
       images,
-      brands
+      brands,
+      price_low,
+      price_high
     } }) {
       categories = categories.map(
         c => c.slug
@@ -42,14 +44,58 @@ export default {
             description,
             categories,
             images,
-            brands
+            brands,
+            price_low,
+            price_high
           }
         }
       })
       return product
     },
 
-    async getProducts (state, { size, num, search, orderBy: { ascending = false, attribute = 'updated_at' } }) {
+    async update ({ commit, dispatch, state }, { product: {
+      slug,
+      name,
+      description,
+      categories,
+      images,
+      brands,
+      price_low,
+      price_high
+    } }) {
+      let priceLow = parseFloat(price_low)
+      let priceHigh = parseFloat(price_high)
+
+      categories = categories.map(
+        c => c.slug
+      )
+      images = images.map(
+        i => i.slug
+      )
+      brands = brands.map(
+        b => b.slug
+      )
+      let {
+        data: { product }
+      } = await client.mutate({
+        mutation: UPDATE_PRODUCT,
+        variables: {
+          product: {
+            slug,
+            name,
+            description,
+            categories,
+            images,
+            brands,
+            price_low: priceLow,
+            price_high: priceHigh
+          }
+        }
+      })
+      return product
+    },
+
+    async getProducts (state, { size, num, search, where = {}, orderBy: { ascending = false, attribute = 'updated_at' } }) {
       size = parseInt(size)
       let { data: { productPage: { products, pagination } } } = await client.query({
         query: PRODUCT_BY_PAGE,
@@ -60,7 +106,8 @@ export default {
             ascending,
             attribute
           },
-          search
+          search,
+          where
         }
       })
 

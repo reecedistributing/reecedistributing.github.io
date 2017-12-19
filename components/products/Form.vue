@@ -1,19 +1,6 @@
 <template lang="pug">
 v-flex
-  v-breadcrumbs(divider="/")
-    v-breadcrumbs-item(
-      :exact="true"
-      :disabled="false"
-      :nuxt="true", 
-      :to="{ name:'products' }"
-      key="1"
-    )
-      | Products
-    v-breadcrumbs-item(
-      :disabled="true"
-      key="2"
-    )
-      | {{ label }}
+  route-bread-crumbs
   h3.grey--text.text--darken-1 {{label}}
   v-card
     v-card-text
@@ -63,25 +50,25 @@ v-flex
             prefix="$"
             type="number"
             min="0"
-            :max="value.price_high"
             step="0.01"
             :required="value.price_high != null"
-            @input="$v.minPrice.$touch()"
-            @blur="$v.minPrice.$touch()"
             :error-messages="priceErrors.minPrice"
+            @input="priceValidator"
+            @blur="priceValidator"
           )
+            //- :max="value.price_high == null? 0 : value.price_high"
           v-text-field(
             label="Maximum Price"
             v-model="value.price_high"
             prefix="$"
             type="number"
-            :min="value.price_low"
             step="0.01"
             :required="value.price_low != null"
-            @input="$v.maxPrice.$touch()"
-            @blur="$v.maxPrice.$touch()"
             :error-messages="priceErrors.maxPrice"
+            @input="priceValidator"
+            @blur="priceValidator"
           )
+            //- :min="value.price_low == null? 0 : value.price_low"
           image-upload(
             :thumbs="thumbs"
             :cloudinary="cloudinary"
@@ -108,6 +95,7 @@ v-flex
   import DeepSelect from '~/components/inputs/DeepSelect.vue'
   import NewCategory from '~/components/categories/New.vue'
   import NewBrand from '~/components/brands/New.vue'
+  import RouteBreadCrumbs from '~/components/global/RouteBreadCrumbs'
 
   // setup to support v-model
   // enter initial product as v-model
@@ -122,6 +110,11 @@ v-flex
             return this.minOrMaxPriceEntered;
           }
         ),
+        maxValue: maxValue(
+          nestedModel => {
+            return this.value.price_high
+          }
+        )
       },
       maxPrice: { 
         required: requiredIf(
@@ -129,17 +122,25 @@ v-flex
             return this.minOrMaxPriceEntered;
           }
         ),
+        minValue: minValue(
+          nestedModel => {
+            return this.value.price_low
+          }
+        )
       },
     },
 
     data: _ => ({
+        priceErrors: {
+          minPrice: [],
+          maxPrice: []
+        },
         categoryFormVisible: false,
         brandFormVisible: false,
         options: {
           url: '/upload',
           paramName: 'file'
         },
-        thumbs: [],
         newCategory: {
           name: '',
           description: '',
@@ -183,6 +184,11 @@ v-flex
     },
 
     computed: {
+      thumbs () {
+        return this.value.images.map(
+          img => img.url
+        )
+      },
       cloudinary () {
         let config = this.$store.state.images.cloudinary.config
         return config
@@ -212,7 +218,16 @@ v-flex
         return !bothZero && !bothNull
       },
 
-      priceErrors () {
+    },
+    
+    methods: {
+      priceValidator () {
+        this.$v.minPrice.$touch();
+        this.$v.maxPrice.$touch();
+        this.setPriceErrors();
+      },
+      setPriceErrors () {
+        console.log('priceErrors')
         const errors = {
           minPrice: [],
           maxPrice: []
@@ -220,14 +235,12 @@ v-flex
         if (!this.$v.maxPrice.$dirty && !this.$v.minPrice.$dirty) return errors
 
         if ( this.minOrMaxPriceEntered && !(this.value.price_high > this.value.price_low) ) {
-         if (this.$v.maxPrice.$dirty) errors.maxPrice.push('Maximum Price must be greater than Minimum Price!')
-         if (this.$v.minPrice.$dirty) errors.minPrice.push('Minimum Price must be less than Maximum Price!')
+          console.log(this.value.price_high, this.value.price_low)
+        if (this.$v.maxPrice.$dirty) errors.maxPrice.push('Maximum Price must be greater than Minimum Price!')
+        if (this.$v.minPrice.$dirty) errors.minPrice.push('Minimum Price must be less than Maximum Price!')
         }
-        return errors
-      }
-    },
-    
-    methods: {
+        this.priceErrors = errors
+      },
 
       onSubmit (event) {
         this.$emit('complete', { event, product: this.value })
@@ -251,36 +264,60 @@ v-flex
         let cl_public_id = cloudinary_res.public_id;
 
         let savedImage = await this.$store.dispatch('images/create', { cl_secure_url, cl_public_id, res_width: 100, res_height: 100 })
-        this.value.images.push(savedImage);
+        this.value.images = [ ...this.value.images, savedImage ];
         this.$emit('input', this.value)
-        this.thumbs.push(savedImage.url)
         this.notify();
       },
+
       notify () {
         let text = `Image Uploaded!`;
         let color = `success`;
         let duration = 100000000;
         this.$store.dispatch('notifications/notify', { text, color, duration })
+      },
+
+      leaveConfirm (event) {
+        if(!e) e = window.event;
+        //e.cancelBubble is supported by IE - this will kill the bubbling process.
+        e.cancelBubble = true;
+        e.returnValue = 'You sure you want to leave?'; //This is displayed on the dialog
+      
+        //e.stopPropagation works in Firefox.
+        if (e.stopPropagation) {
+            e.stopPropagation();
+            e.preventDefault();
+        }
       }
     },
 
     watch: {
       value: {
         handler () {
-          this.$emit('input', this.value)
+          this.$emit('input', this.value);
         },
         deep: true
       }
     },
-
+    
     mounted () {
-      this.$emit('input', this.value)
+      this.$emit('input', this.value);
+      ["onbeforeunload", "beforeunload", "onunload"].forEach(
+        eventString => window[eventString] = (...args) => this.leaveConfirm(...args)
+      )
     },
+
+    beforeDestroy () {
+      ["onbeforeunload", "beforeunload", "onunload"].forEach(
+        eventString => window.removeEventListener("onunload", this.leaveConfirm)
+      )
+    },
+
     components: {
       ImageUpload,
       DeepSelect,
       NewCategory,
-      NewBrand
+      NewBrand,
+      RouteBreadCrumbs
     }
   }
 

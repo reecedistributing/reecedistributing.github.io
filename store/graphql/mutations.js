@@ -1,4 +1,9 @@
 import gql from 'graphql-tag'
+import {
+  // BRAND_QUERY_PARAMS,
+  CATEGORY_QUERY_PARAMS,
+  PRODUCT_QUERY_PARAMS
+} from './queries'
 
 export const CREATE_BRAND = gql`mutation createNewBrand($brand:BrandCreateAttrs!) {
   brand: createBrand(brand:$brand) {
@@ -10,9 +15,7 @@ export const CREATE_BRAND = gql`mutation createNewBrand($brand:BrandCreateAttrs!
 
 export const CREATE_CATEGORY = gql`mutation createNewCategory($category:CategoryCreateAttrs!) {
   category: createCategory(category:$category) {
-    name
-    description
-    slug
+    ${CATEGORY_QUERY_PARAMS}
   }
 }`
 
@@ -25,12 +28,16 @@ export const CREATE_IMAGE = gql`mutation createNewImage($cloudinary:CloudinaryIm
 
 export const CREATE_PRODUCT = gql`mutation createNewProduct($product:ProductCreateAttrs!) {
   product: createProduct(product:$product) {
-    name
-    description
-    price_high
-    price_low
-    slug
-    created_at
-    updated_at
+    ${PRODUCT_QUERY_PARAMS}
+    images {
+      slug
+      url
+    }
+  }
+}`
+
+export const UPDATE_PRODUCT = gql`mutation updateNewProduct($product:ProductUpdateAttrs!) {
+  product: updateProduct(product:$product) {
+    ${PRODUCT_QUERY_PARAMS}
   }
 }`

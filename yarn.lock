@@ -5960,6 +5960,10 @@ void-elements@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-2.0.1.tgz#c066afb582bb1cb4128d60ea92392e94d5e9dbec"
 
+vue-carousel:
+  version "0.6.5"
+  resolved "https://registry.yarnpkg.com/vue-carousel/-/vue-carousel-0.6.5.tgz#f04e4485ce6ac2404eaff186923f7ad057839205"
+
 vue-core-image-upload@^2.3.10:
   version "2.3.10"
   resolved "https://registry.yarnpkg.com/vue-core-image-upload/-/vue-core-image-upload-2.3.10.tgz#6a3928b76f7e42960882e2329333e590fa8e91e4"

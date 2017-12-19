@@ -16,8 +16,16 @@ export const client = new ApolloClient({
   link: new HttpLink({
     uri: GRAPHQL_URI
   }),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache({
+    dataIdFromObject: object => object.slug
+  })
 })
+
+let apolloQuery = (...args) => client.query(...args)
+client.query = async (...args) => {
+  await client.resetStore()
+  return apolloQuery(...args)
+}
 
 export const query = (...args) => {
   return client.query({

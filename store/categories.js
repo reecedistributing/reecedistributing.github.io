@@ -2,6 +2,15 @@ import { client } from './apollo-client'
 import { ALL_ROOT_CATEGORIES } from './graphql/queries'
 import { CREATE_CATEGORY } from './graphql/mutations'
 
+// if (process.browser) {
+//   client.cache.watch({
+//     callback (...args) {
+//       console.log('change occured in cache')
+//       console.log(...args)
+//     }
+//   })
+// }
+
 export default {
   namespaced: true,
   state: _ => ({
@@ -37,17 +46,13 @@ export default {
 
     async getAllRoot ({ commit, dispatch, state }) {
       console.log('getAllRoot running')
-      let { data: { categories } } = await client.query({
-        query: ALL_ROOT_CATEGORIES,
-        update: (store, { data: { categories } }) => {
-          console.log(categories)
-          commit('updateAllRoot', {
-            data: categories
-          })
-        }
-      })
-      commit('updateAllRoot', {
-        data: categories
+      let queryObj = {
+        query: ALL_ROOT_CATEGORIES
+      }
+      let { data: { categories } } = await client.query(queryObj)
+
+      await client.watchQuery(queryObj).subscribe({
+        next: ({ data: { categories = [] } }) => commit('updateAllRoot', { data: categories })
       })
       return categories
     }
