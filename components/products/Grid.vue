@@ -41,11 +41,11 @@ v-layout(column)
     //-   v-spacer
     //-   v-btn(icon)
     //-     v-icon search
-    v-container.grey.lighten-4(fluid grid-list-md)
-      v-layout(
-          row wrap justify-start align-start
-      )
-        ProductCard(v-for="product in products", :product="product", :key="product.slug", :flex="product.flex")
+    //- v-container.grey.lighten-4(fluid grid-list-md)
+    //-   v-layout(
+    //-       row wrap justify-start align-start
+    //-   )
+    //-     ProductCard(v-for="product in products", :product="product", :key="product.slug", :flex="product.flex")
 
 </template>
 
