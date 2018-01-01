@@ -12,7 +12,10 @@ let store = {
     images: IMAGES,
     categories: CATEGORIES,
     brands: BRANDS
-  }
+  },
+  plugins: [
+
+  ]
 }
 
 const createStore = () => {

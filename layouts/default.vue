@@ -1,25 +1,27 @@
 <template lang="pug">
   v-app
-    v-snackbar(
+    div(
       v-for="(notif, index) in notifications",
-      :timeout='notif.duration', 
-      :color="notif.color",
-      v-model="snackbar[notif.id]",
-      :multi-line="notif.multiline", 
-      :vertical="!$vuetify.breakpoint.md", 
-      :key="notif.text + index"
-      :top="true", 
-      :bottom="false", 
-      :absolute="true"
-      :right="true", 
-      :left="false", 
     )
-      | {{ notif.text }}
-      v-btn(
-        dark 
-        flat 
-        @click.native="snackbar[notif.id] = false"
-      ) Close
+      v-snackbar(
+        :timeout='notif.duration', 
+        :color="notif.color",
+        v-model="snackbar[notif.id]",
+        :multi-line="notif.multiline", 
+        :vertical="!$vuetify.breakpoint.md", 
+        :key="notif.text + index"
+        :top="true", 
+        :bottom="false", 
+        :absolute="true"
+        :right="true", 
+        :left="false", 
+      )
+        | {{ notif.text }}
+        v-btn(
+          dark 
+          flat 
+          @click.native="snackbar[notif.id] = false"
+        ) Close
     v-toolbar.elevation-0
       nuxt-link.lowkey_link(:to="{ path:'/' }" tag="v-toolbar-title").grey--text.text--darken-2
         v-avatar
@@ -48,6 +50,7 @@ export default {
       let snackbar = this.snackbar;
       queue.forEach(
         notif => {
+          if (!notif.id) notif.id = notif.text + Date.now()
           if( !snackbar.hasOwnProperty(notif.id) ) {
             Vue.set(snackbar, notif.id, true)
           }

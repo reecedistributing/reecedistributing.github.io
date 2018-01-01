@@ -9,6 +9,7 @@
     item-text="name"
     :multiple="multiple",
     autocomplete
+    ref="deepselect"
   )
     //- template(slot="item", scope="data")
     //-   v-list-tile-avatar
@@ -66,10 +67,22 @@
     },
     methods: {
       log: _ => console.log(_),
+      
       updateValue (value) {
+        window.__REFS = this.$refs
         this.$emit('input', value)
-      }
+      },
+      
     },
+
+    computed: {
+
+      vSelect () {
+        return this.$refs.deepselect
+      }
+
+    },
+    
     components: {
       ChildSelect
     },

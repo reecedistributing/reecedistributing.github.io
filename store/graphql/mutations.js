@@ -41,3 +41,9 @@ export const UPDATE_PRODUCT = gql`mutation updateNewProduct($product:ProductUpda
     ${PRODUCT_QUERY_PARAMS}
   }
 }`
+
+export const DELETE_PRODUCT = gql`mutation destroyProduct($slug:String!) {
+  status: deleteProduct(slug:$slug) {
+    success
+  }
+}`

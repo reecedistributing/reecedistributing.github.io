@@ -22,7 +22,7 @@ v-flex
           v-layout.elevation-0.transparent
             v-tooltip(top, right)
               v-btn(center, dark, fab, flat, small, color="accent", slot="activator"
-                @click="createBrand({})"
+                @click="createBrand"
               )
                 v-icon add
               span Create New Brand
@@ -30,12 +30,13 @@ v-flex
               label="Brands", 
               v-model="value.brands", 
               :items="brands",
+              ref="brandSelect"
             )
           v-layout.elevation-0.transparent
             v-tooltip(top, right)
               v-btn(
                 center, dark, fab, flat, small, color="accent", slot="activator"
-                @click="createCategory({})"
+                @click="createCategory"
               )
                 v-icon add
               span Create New Category
@@ -43,6 +44,7 @@ v-flex
               label="Categories", 
               v-model="value.categories", 
               :items="categories",
+              ref="categorySelect"
             )
           v-text-field(
             label="Minimum Price"
@@ -80,11 +82,11 @@ v-flex
         v-dialog(v-model="categoryFormVisible", max-width="50%")
           v-card 
             v-card-text
-              new-category(v-model="newCategory")
+              new-category(@create="handleCategorySubmit", v-if="categoryFormVisible")
         v-dialog(v-model="brandFormVisible", max-width="50%")
           v-card 
             v-card-text
-              new-brand(v-model="newBrand")
+              new-brand(@create="handleBrandSubmit", v-if="brandFormVisible")
 
 </template>
 
@@ -131,6 +133,8 @@ v-flex
     },
 
     data: _ => ({
+        brandRefTag: 'brandDialog',
+        categoryRefTag: 'categoryDialog',
         priceErrors: {
           minPrice: [],
           maxPrice: []
@@ -194,6 +198,9 @@ v-flex
         return config
       },
       minOrMaxPriceEntered () {
+        if (window) {
+          window.STORE = this.$store
+        }
         let price_low = this.value.price_low;
         let price_high = this.value.price_high;
         let areEqual = price_high == price_low;
@@ -249,14 +256,27 @@ v-flex
       addBrand ({ name, description, parent }) {
 
       },
-      createCategory ({name = '', description = '', parent = null}) {
-        this.newCategory = { name, description, parent };
-        this.categoryFormVisible = true
+
+      createCategory () {
+        this.newCategory = { name: '', description: '', parent: null };
+        this.categoryFormVisible = true;
       },
 
-      createBrand ({name = '', description = '', parent = null}) {
-        this.newBrand = { name, description, parent };
-        this.brandFormVisible = true
+      handleCategorySubmit (category) {
+        // __REFS.deepselect.selectItem(__REFS.deepselect.items[10])
+        let select = this.$refs.categorySelect.vSelect;
+        let item = select.items.filter( i => (i.slug == category.slug) )
+        select.selectItem(item)
+        this.categoryFormVisible = false;
+      },
+
+      createBrand () {
+        this.newBrand = { name: '', description: '', parent: null };
+        this.brandFormVisible = true;
+      },
+
+      handleBrandSubmit () {
+        this.brandFormVisible = false;
       },
 
       async handleSuccessfulUpload (cloudinary_res) {

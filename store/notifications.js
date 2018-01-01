@@ -11,7 +11,8 @@ export default {
       let notif = {
         text,
         color,
-        multiline
+        multiline,
+        duration
       }
       state.queue.push(notif)
     }

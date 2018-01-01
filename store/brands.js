@@ -4,10 +4,22 @@ import { ALL_ROOT_BRANDS } from './graphql/queries'
 
 export default {
   namespaced: true,
-
+  apollo: {
+    cool: true,
+    idk: true,
+    wat: true
+  },
   state: _ => ({
     allRoot: []
   }),
+
+  mutations: {
+
+    updateAllRoot (state, { data }) {
+      state.allRoot = data
+    }
+
+  },
 
   actions: {
 
@@ -30,9 +42,13 @@ export default {
       return brand
     },
 
-    async getAllRoot ({ state }) {
-      let { data: { brands } } = await client.query({
+    async getAllRoot ({ state, commit }) {
+      let queryObj = {
         query: ALL_ROOT_BRANDS
+      }
+      let { data: { brands } } = await client.query(queryObj)
+      await client.watchQuery(queryObj).subscribe({
+        next: ({ data: { brands = [] } }) => commit('updateAllRoot', { data: brands })
       })
       state.allRoot = brands
       return brands

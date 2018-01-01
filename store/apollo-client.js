@@ -3,6 +3,7 @@ import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import gql from 'graphql-tag'
 import fetch from 'node-fetch'
+import EventEmitter from 'eventemitter3'
 
 if (process.browser) {
   window.fetch = fetch
@@ -13,6 +14,7 @@ if (process.browser) {
 const GRAPHQL_URI = process.env.GRAPHQL_URI || 'http://localhost:8080/graphql'
 
 export const client = new ApolloClient({
+  ssrMode: !process.browser,
   link: new HttpLink({
     uri: GRAPHQL_URI
   }),
@@ -21,10 +23,19 @@ export const client = new ApolloClient({
   })
 })
 
-let apolloQuery = (...args) => client.query(...args)
+client.emitter = new EventEmitter()
+
+const apolloQuery = client.query.bind(client)
 client.query = async (...args) => {
-  await client.resetStore()
+  await client.cache.reset()
   return apolloQuery(...args)
+}
+
+const apolloMutation = client.mutate.bind(client)
+client.mutate = async (...args) => {
+  let rtnVal = await apolloMutation(...args)
+  client.emitter.emit('update')
+  return rtnVal
 }
 
 export const query = (...args) => {

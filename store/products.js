@@ -1,5 +1,5 @@
 import { client } from './apollo-client'
-import { CREATE_PRODUCT, UPDATE_PRODUCT } from './graphql/mutations'
+import { CREATE_PRODUCT, UPDATE_PRODUCT, DELETE_PRODUCT } from './graphql/mutations'
 import { PRODUCT_BY_SLUG, PRODUCT_BY_PAGE } from './graphql/queries'
 
 export default {
@@ -95,7 +95,18 @@ export default {
       return product
     },
 
-    async getProducts (state, { size, num, search, where = {}, orderBy: { ascending = false, attribute = 'updated_at' } }) {
+    async delete ({ commit, dispatch, state }, { slug }) {
+      let { status } = await client.mutate({
+        mutation: DELETE_PRODUCT,
+        variables: {
+          slug
+        }
+      })
+
+      return status
+    },
+
+    async getProducts (state, { size, num, search, orderBy: { ascending = false, attribute = 'updated_at' } }) {
       size = parseInt(size)
       let { data: { productPage: { products, pagination } } } = await client.query({
         query: PRODUCT_BY_PAGE,
@@ -106,8 +117,7 @@ export default {
             ascending,
             attribute
           },
-          search,
-          where
+          search
         }
       })
 

@@ -64,7 +64,7 @@ v-layout
         :key="key"
         :id="key"
       )
-        v-flex(xs10, offset-xs1, )
+        v-flex(xs10, offset-xs1)
           component(
             :is="val", 
             :products="products", 
