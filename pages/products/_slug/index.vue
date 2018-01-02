@@ -30,7 +30,7 @@ v-container
                       v-list
                         v-list-tile(:nuxt="true", :to="{ name:'products-slug-edit', params: { slug: product.slug } }")
                           v-list-tile-title Edit
-                        v-list-tile(@click="deleteProduct")
+                        v-list-tile(@click.stop="deleteConfirmDialog = true")
                           v-list-tile-title Delete
                 blockquote {{product.description}} 
           
@@ -85,6 +85,17 @@ v-container
                   p Maximum Price
                   p ${{product.price_high.toFixed(2).toString() || '0.00'}}
         v-layout(row wrap)
+        v-dialog(v-model="deleteConfirmDialog", :fullscreen="$vuetify.breakpoint.xsOnly")
+          v-card
+            v-card-title.headline Are you sure you want to delete this product?
+            v-card-text
+              | This action is irreversible.
+              //- v-progress-circular(indeterminate="" v-bind:size="70" v-bind:width="7" color="primary")
+            v-card-actions
+              v-spacer
+              v-btn(color="red darken-1" flat="flat" @click.native="deleteConfirmDialog = false") Nevermind
+              v-btn(color="green darken-1" flat="flat" @click.native="deleteProduct") Yes, I'm sure.
+
 
 </template>
 
@@ -96,7 +107,8 @@ v-container
       return {
         product:{},
         suggestedProducts: [],
-        mounted: false
+        mounted: false,
+        deleteConfirmDialog: false,
       }
     },
     
@@ -115,7 +127,7 @@ v-container
         let status = await this.$store.dispatch('products/delete', {
           slug: this.$route.params.slug 
         })
-        
+        this.deleteConfirmDialog = false;
         await this.$router.push(
           {name: 'products'}, 
           async event => {

@@ -1,0 +1,10 @@
+{
+    "regions": ["us-west-*"],
+    "cors": {
+        "allowed_origins": ["http://localhost:8000"],
+        "allowed_methods": ["HEAD", "GET", "POST", "PUT", "PATCH", "DELETE"],
+        "allowed_headers": ["Content-Type", "Authorization"]
+    },
+    "postdeploy": "npm install",
+    "predeploy": "echo 'predeploy in progress' && npm prune --production"
+}

@@ -10,10 +10,12 @@
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
-    "start": "nuxt start",
+    "start": "alias nuxt='node_modules/.bin/nuxt' && nuxt start",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
-    "precommit": "npm run lint"
+    "precommit": "npm run lint",
+    "deploy": "bash deploy.sh production",
+    "deploydev": "bash deploy.sh development"
   },
   "dependencies": {
     "@nuxtjs/sitemap": "^0.0.3",

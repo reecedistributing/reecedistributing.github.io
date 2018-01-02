@@ -97,7 +97,7 @@ v-layout
         pageCount: 1,
         pageNum: 1,
         sortBy: {
-          attribute:'',
+          attribute:'updated_at',
           ascending: true
         },
         views: {
@@ -171,6 +171,9 @@ v-layout
       pageNum () {
         console.log('updated')
         this.updateRouteWithPageNumber()
+      },
+      sortBy: {
+        deep: true,
       }
     },
     components: {

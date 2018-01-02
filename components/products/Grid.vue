@@ -2,7 +2,7 @@
 v-layout(column)
   v-flex(xs12)
     v-layout
-      v-flex(xs11 md6 offset-md3 justify-space-around)
+      v-flex(xs11 md6 offset-md3 justify-space-around).mt-4
         //- SORT OPTIONS FORM
         transition(name="slide-x-reverse-transition").grey--text
           v-layout(v-if="sortOptionsActive")
@@ -74,11 +74,11 @@ v-layout(column)
   export default {
     data: _ => ({
       sortAttribute: null,
-      ascending: true,
+      ascending: false,
       sortOptionsActive: false,
       sortable: [
           { text: 'name', value: 'name' },
-          { text: 'description', value: 'description'},
+          { text: 'description', value: 'description' },
           { text: 'Min Price', value: 'price_low', render: v => v ? '$' + v : "None" },
           { text: 'Max Price', value: 'price_high', render: v => v ? '$' + v : "None" },
           { text: 'Created (Date)', value: 'created_at', render: v => new Date(parseInt(v)).toLocaleDateString() },
@@ -94,12 +94,33 @@ v-layout(column)
         type: Boolean,
         required: false,
         default: false
+      },
+      initial_sort_attr: {
+        type: String,
+        required: true
+      },
+      initial_sort_ascending: {
+        type: Boolean,
+        required: true
       }
     },
     components: {
       ProductCard
     },
+
+    watch: {
+      ascending () {
+        this.emitSort()
+      },
+      sortAttribute () {
+        this.emitSort()
+      }
+    },
+
     methods: {
+      emitSort () {
+        this.$emit('sort', { ascending: this.ascending, attribute: this.sortAttribute })
+      },
       activateSortOptions () {
         this.sortOptionsActive = true
       },
@@ -109,6 +130,11 @@ v-layout(column)
       toggleSortOptions () {
         this.sortOptionsActive = ! this.sortOptionsActive;
       }
+    },
+
+    mounted () {
+      this.sortAttribute = this.initial_sort_attr;
+      this.ascending = this.initial_sort_ascending
     }
   }
 
