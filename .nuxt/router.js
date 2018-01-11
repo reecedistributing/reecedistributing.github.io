@@ -6,7 +6,10 @@ Vue.use(Router)
 const _9fccc362 = () => import('../pages/index.vue' /* webpackChunkName: "pages/index" */).then(m => m.default || m)
 const _518d3d8c = () => import('../pages/products/index.vue' /* webpackChunkName: "pages/products/index" */).then(m => m.default || m)
 const _41f83f08 = () => import('../pages/products/new.vue' /* webpackChunkName: "pages/products/new" */).then(m => m.default || m)
+const _6ee76a7c = () => import('../pages/auth/sign-out.vue' /* webpackChunkName: "pages/auth/sign-out" */).then(m => m.default || m)
 const _fcfd3366 = () => import('../pages/admin/nested/index.vue' /* webpackChunkName: "pages/admin/nested/index" */).then(m => m.default || m)
+const _2503f9e1 = () => import('../pages/auth/sign-in.vue' /* webpackChunkName: "pages/auth/sign-in" */).then(m => m.default || m)
+const _51279aa2 = () => import('../pages/auth/signed-in.vue' /* webpackChunkName: "pages/auth/signed-in" */).then(m => m.default || m)
 const _07a808f5 = () => import('../pages/products/_slug/index.vue' /* webpackChunkName: "pages/products/_slug/index" */).then(m => m.default || m)
 const _0ea4a7b7 = () => import('../pages/products/_slug/edit.vue' /* webpackChunkName: "pages/products/_slug/edit" */).then(m => m.default || m)
 
@@ -60,9 +63,24 @@ export function createRouter () {
 			name: "products-new"
 		},
 		{
+			path: "/auth/sign-out",
+			component: _6ee76a7c,
+			name: "auth-sign-out"
+		},
+		{
 			path: "/admin/nested",
 			component: _fcfd3366,
 			name: "admin-nested"
+		},
+		{
+			path: "/auth/sign-in",
+			component: _2503f9e1,
+			name: "auth-sign-in"
+		},
+		{
+			path: "/auth/signed-in",
+			component: _51279aa2,
+			name: "auth-signed-in"
 		},
 		{
 			path: "/products/:slug",

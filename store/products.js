@@ -124,7 +124,7 @@ export default {
       products = products.map(
         (p, i) => {
           p = {...p}
-          p.flex = 4
+          p.flex = 3
           p.main_img_url = 'https://source.unsplash.com/1600x900?tools?' + i
           return p
         }

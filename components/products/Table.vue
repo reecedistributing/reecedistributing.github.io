@@ -8,9 +8,9 @@ v-layout(justify-center="")
         v-bind:headers="headers",
         v-bind:items="items", 
         :loading="loading"
-        v-bind:pagination.sync="pagination"
         hide-actions
       )
+        //- v-bind:pagination.sync="pagination"
         template(slot="headerCell", scope="props")
           v-tooltip(bottom="")
             span(slot="activator")

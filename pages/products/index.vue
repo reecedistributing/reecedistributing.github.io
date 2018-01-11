@@ -1,97 +1,143 @@
 
 <template lang="pug">
-v-layout
-  //- IMAGE PREVIEWS
-  v-tabs(dark, grow, v-model="activeView", default="views[activeView]")
-    v-toolbar(not-extended).primary
-      v-toolbar-side-icon.white--text.text--darken-1
-      v-toolbar-title.white--text Products
-      v-spacer(v-if="!searchActive")
+  //- v-layout
+  v-flex
+    //- IMAGE PREVIEWS
+    v-tabs(dark, grow, v-model="activeView", default="views[activeView]")
+      v-toolbar(not-extended)
+        //- .primary
+        //- v-toolbar-side-icon
+          //- .white--text.text--darken-1
+        v-toolbar-title(v-if="desktopBreakpoint")
+          //- .white--text 
+          | Products
+        //- v-spacer
 
-      //- SEARCH BAR
-      transition(name="slide-x-reverse-transition").grey--text
-        v-flex(
-          v-if="searchActive"
-          sm6
-          offset-sm3
-          justify-content="right"
-        )
-          form(@submit.prevent="searchProducts")
-            v-text-field(
-              :autofocus="true"
-              @blur="tryDeactivate"
-              transition="slide-x-reverse-transition"
-              solo
-              label="Search"
-              append-icon="keyboard_voice"
-              prepend-icon="search"
-              color="black"
-              text-color="black"
-              v-model="search"
-            )
-      v-spacer
-      //- MENU BUTTONS
-      v-btn(
-        @click="activateSearch"
-        icon=""
-        v-if="!searchActive"
-      ).white--text.text--darken-1
-        v-icon search
-      v-btn(icon="").white--text.text--darken-1
-        v-icon more_vert
-      //- v-toolbar-title.display-2(slot="extension") Products
-
-    //- TABLE/GRID SWITCHES
-    v-tabs-bar
-      v-tabs-slider(color="yellow")
-      v-tabs-item(
-        :nuxt="true"
-        v-for="(val, key) in views"
-        @click="switchView(key)"
-        :key="key"
-        :target="key"
-        :href="'#' + key"
-        ripple
-      )
-        | {{key}}
-      v-btn(:nuxt="true", :to="{ name:'products-new' }", :flat="true").white--text.text--darken-1
-        | New Product
-
-    //- TABLE OR GRID OF ITEMS
-    v-tabs-items
-      v-tabs-content(
-        v-for="(val, key) in views"
-        :key="key"
-        :id="key"
-      )
-        v-flex(xs10, offset-xs1)
-          component(
-            :is="val", 
-            :products="products", 
-            :loading="loading", 
-            :initial_sort_attr="sortBy.attribute",
-            :initial_sort_ascending="sortBy.ascending"
-            @sort="updateRouteWithSortParams"
+        //- SEARCH BAR
+        //- transition(name="slide-x-reverse-transition")
+          //- .grey--text
+          //- v-if="true || searchActive"
+        v-layout
+          v-flex(
+            sm8
+            offset-sm2
+            justify-content="space-around"
           )
+            form(@submit.prevent="searchProducts")
+              //- :ref="searchRef"
+                transition="slide-x-reverse-transition"
+              v-text-field(
+                @blur.prevent="deactivateSearch"
+                @focus.prevent="activateSearch"
+                :autofocus="false"
+                solo
+                label="Search"
+                append-icon="keyboard_voice"
+                prepend-icon="search"
+                v-model="search"
+                :class="searchClasses"
+                text-color="black"
+              )
+                //- color="black"
+        //- v-spacer
+        //- v-spacer
+        //- MENU BUTTONS
+        //- v-btn(
+        //-   @click="activateSearch"
+        //-   icon=""
+        //-   v-if="!searchActive"
+        //- )
+        //-   //-.white--text.text--darken-1
+        //-   v-icon search
+        //- v-btn(icon="")
+        //-   //-.white--text.text--darken-1
+        //-   v-icon more_vert
+        v-btn(v-if="user", :nuxt="true", :to="{ name:'products-new' }", :icon="!desktopBreakpoint", :flat="false").elevation-1.primary.white--text.mr-3
+          //- .white--text.text--darken-1
+          span(v-if="desktopBreakpoint") New Product
+          v-icon(v-if="!desktopBreakpoint") add
+        //- v-toolbar-title.display-2(slot="extension") Products
 
-    //- PAGINATION
-    v-container
-      v-layout(justify-center="")
-        v-flex(xs8="")
-          v-card
-            v-card-text
-              v-pagination(:length="pageCount", v-model="pageNum")
+      //- TABLE/GRID SWITCHES
+      v-tabs-bar
+        v-tabs-slider(color="yellow")
+        v-tabs-item(
+          :nuxt="true"
+          v-for="(val, key) in views"
+          @click="switchView(key)"
+          :key="key"
+          :target="key"
+          :href="'#' + key"
+          ripple
+        )
+          | {{key}}
+
+      //- TABLE OR GRID OF ITEMS
+      v-tabs-items
+        v-tabs-content(
+          v-for="(val, key) in views"
+          :key="key"
+          :id="key"
+        )
+          v-layout
+            //- FILTER OPTIONS
+            v-flex(
+              v-if="$vuetify.breakpoint.smAndUp"
+              xs3
+            ).mt-4
+              v-card(flat).accent.pl-0.mt-4
+                v-card-text
+                  v-card.floating-card-custom.mb-1.pa-3
+                    v-card-text
+                      v-toolbar(flat)
+                        v-list
+                          v-list-tile
+                            v-list-tile-content
+                              v-list-tile-title Filters
+                      v-divider
+                      v-list(three-line="" subheader="")
+                        v-subheader User Controls
+                        v-list-tile
+                          v-list-tile-content
+                            v-list-tile-title Price
+                            v-list-tile-sub-title Set the content filtering level to restrict apps that can be downloaded
+                        v-list-tile
+                          v-list-tile-content
+                            v-list-tile-title Password
+                            v-list-tile-sub-title Require password for purchase or use password to restrict purchase
+                    
+            v-flex(sm9, xs12)
+              component(
+                :is="val", 
+                :products="products", 
+                :loading="loading", 
+                :initial_sort_attr="sortBy.attribute",
+                :initial_sort_ascending="sortBy.ascending"
+                @sort="updateRouteWithSortParams"
+              )
+
+      //- PAGINATION
+      v-container
+        v-layout(justify-center)
+          //- v-flex(xs8, justify-center)
+            //- v-card.transparent.elevation-0
+              //- v-card-text
+          v-pagination(:length="pageCount", v-model="pageNum", total-visible="7")
 
 </template>
 
 <script>
   import ProductGrid from '~/components/products/Grid.vue'
   import ProductTable from '~/components/products/Table.vue'
+  import { mapState } from 'vuex'
+
   export default {
     data(){
       return {
+        mini: true,
+        searchRef: 'searlalskf;lajls;',
         search: '',
-        searchActive: false,
+        searchActive: true,
         loading: false,
         products: [],
         pageCount: 1,
@@ -136,9 +182,25 @@ v-layout
       }
     },
     computed: {
+      desktopBreakpoint () {
+        return this.$vuetify.breakpoint.mdAndUp
+      },
       activeComponent () {
         return this.views[this.activeView]
-      }
+      },
+      searchClasses () {
+        let classes = [] 
+        if (process.browser) {
+          let elev = this.searchActive ? 'elevation-1' : 'elevation-0'
+          let bg = this.searchActive ? '' : 'faded'
+          classes.push(elev, bg)
+        }
+        if(this.$store.state.dark) classes.push('black')
+        return classes
+      },
+      ...mapState('auth', [
+        'user'
+      ])
     },
     methods: {
       async searchProducts () {
@@ -183,6 +245,12 @@ v-layout
   }
 </script>
 
-<style lang="scss">
- .idk{}
+<style lang="scss" scoped>
+ .faded {
+   opacity: 0.9;
+ }
+ .floating-card-custom {
+   margin-bottom: 34px;
+   bottom: 34px;
+ }
 </style>

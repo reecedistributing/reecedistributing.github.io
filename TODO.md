@@ -8,7 +8,15 @@
     - [X] Get images to create
   - [X] Require that min price is less than max price 
 
-  - [] Fix/complete search/filter mechanisms for products
+- [] Fix/complete search/filter mechanisms for products
+  - [] Search by category
+  - [] Async Sort for table
+
+- [X] Add Copyright Footer
+
+- [] Favicon
+
+- [] Fix main Mobile Nav
 
   - [X] product delete confirmation
     - [X] "delete" button opens confirmation dialog.

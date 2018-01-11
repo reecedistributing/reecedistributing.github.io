@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-app
+  v-app(:dark="$store.state.dark")
     div(
       v-for="(notif, index) in notifications",
     )
@@ -12,7 +12,7 @@
         :key="notif.text + index"
         :top="true", 
         :bottom="false", 
-        :absolute="true"
+        :absolute="false"
         :right="true", 
         :left="false", 
       )
@@ -22,28 +22,128 @@
           flat 
           @click.native="snackbar[notif.id] = false"
         ) Close
-    v-toolbar.elevation-0
-      nuxt-link.lowkey_link(:to="{ path:'/' }" tag="v-toolbar-title").grey--text.text--darken-2
-        v-avatar
+
+    //- NAVBAR
+
+    v-toolbar(:dark="$store.state.dark").elevation-0
+      nuxt-link.lowkey_link(:to="{ path:'/' }" tag="v-toolbar-title")
+        //- .grey--text.text--darken-2
+        v-avatar(v-if="!desktop")
           img(src="~/assets/flame_logo.svg", style="filter:lighten(10%)")
-        span Reece Distributing Company
+        span(v-if="desktop" style="font-family: 'Great Vibes', cursive; font-size:2rem;") Reece Distributing
       v-spacer
-      v-toolbar-side-icon.hidden-md-and-up
-      v-toolbar-items.hidden-sm-and-down
+      v-toolbar-items()
+      
+
         v-btn(flat, :to="{ name:'products' }", :nuxt="true") Products
-        v-btn(flat="") Inquiries
-        v-btn(flat="")
-          v-icon account_circle
+        
+        v-layout.mt-2
+          v-flex
+            .text-xs-center
+              v-menu(
+                offset-y, 
+                :close-on-content-click="false", 
+                bottom 
+                left 
+                v-model="inquiryMenu"
+                min-width="50%"
+              )
+
+                //- ACTIVATOR (IN NAV)
+                v-badge(
+                  overlap 
+                  color="red" 
+                  slot="activator"
+                )
+                  span(slot="badge", v-if="productsInCurrentInquiry") {{ productsInCurrentInquiry }}
+                  v-avatar(flat="")
+                    v-icon shopping_cart
+                current
+        //- ACCOUNT AREA (RIGHT SIDE)
+        v-layout.mt-2
+          v-flex
+            v-btn(v-if="!user", :to="{ name:'auth-sign-in' }", :nuxt="true").accent.white--text.elevation-0 Sign In
+        v-layout.mt-2
+          v-flex
+            .text-xs-center
+              v-menu(
+                v-if="user" 
+                offset-y, 
+                :close-on-content-click="false", 
+                bottom 
+                left 
+                v-model="menu"
+              )
+
+                //- ACTIVATOR (IN NAV)
+                v-btn(v-if="user" flat, icon, slot="activator")
+                  v-avatar.grey.lighten-4(:tile="false", size="35px")
+                    img(:src="user.picture" alt="avatar")
+                //- v-btn(color="indigo" dark="" slot="activator") Menu as Popover
+
+                //- POPOVER MENU 
+                v-card
+                  v-list
+                    v-list-tile(avatar)
+                      v-list-tile-content
+                        v-avatar
+                          img(:src="user.picture" alt="AVATAR")
+                      v-list-tile-content
+                        v-list-tile-title {{user.name}}
+                        v-list-tile-sub-title {{user.email}}
+                        //- v-list-tile-sub-title Founder of Vuetify.js
+                      //- v-list-tile-action
+                      //-   v-btn(icon="" :class="fav ? 'red--text' : ''" @click="fav = !fav")
+                      //-     v-icon favorite
+                  v-layout
+                    v-flex(justify-space-between).text-xs-right
+                      v-spacer
+                      v-btn(@click="logOut", flat).primary--text
+                        | Sign Out
+                  v-divider
+                  v-list
+                    //- v-list-tile
+                    //-   v-list-tile-action
+                    //-     v-switch(v-model="message" color="blue")
+                    //-   v-list-tile-title Enable messages
+                    //- v-list-tile
+                    //-   v-list-tile-action
+                    //-     v-switch(v-model="hints" color="blue")
+                    //-   v-list-tile-title Enable hints
+                    v-list-tile
+                      v-list-tile-action
+                        v-switch(v-model="$store.state.dark" color="black")
+                      v-list-tile-title Dark Mode
+                  v-card-actions
+                    v-spacer
+                    v-btn(flat="" @click="menu = false") Cancel
+                    v-btn(color="primary" flat="" @click="menu = false") Save
+        //- v-layout.mt-2
+        //-   v-flex
+        //-     v-btn(icon)
+        //-       v-icon settings
     nuxt
+    v-footer.black.lighten-4.white--text.pa-3
+      v-spacer
+      div © Reece Distributing Inc. {{ new Date().getFullYear() }}
+
 </template>
 
 <script>
 import Vue from 'vue'
-
+import { mapActions, mapState, mapGetters } from 'vuex'
+import Current from '~/components/inquiries/Current.vue'
 export default {
-  data: _ => ({
-    snackbar: {}
-  }),
+  data: _ => {
+    return {
+      drawer: true,
+      hints: false,
+      message: true,
+      menu: false,
+      snackbar: {},
+      inquiryMenu: false
+    }
+  },
   computed: {
     notifications () {
       let queue = this.$store.state.notifications.queue
@@ -57,7 +157,35 @@ export default {
         }
       )
       return queue
-    }
+    },
+    desktop () {
+      return this.$vuetify.breakpoint.mdAndUp
+    },
+    productsInCurrentInquiry () {
+      return Object.values(this.currentInquiry.products).length
+    },
+    ...mapState('auth', [
+      'user'
+    ]),
+    ...mapState('inquiries', {
+      currentInquiry: 'current' 
+    }),
+    ...mapGetters('auth', [
+      'accessToken'
+    ])
+  },
+  methods: {
+    ...mapActions('auth', [
+      'loadUserInfo',
+      'logOut'
+    ]),
+  },
+  mounted () {
+    this.loadUserInfo()
+    if(process.browser) window.THAT = this
+  },
+  components: {
+    Current
   }
 }
 </script>

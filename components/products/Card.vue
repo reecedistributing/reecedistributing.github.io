@@ -1,37 +1,48 @@
 
 <template lang="pug">
-  nuxt-link.lowkey_link(:to="{ name:'products-slug', params: { slug: product.slug }}" tag="div")
-    v-card
-      v-card-media(:src="product.main_img_url" height="250px")
-        v-container(fill-height fluid)
-          v-layout(fill-height)
-            v-flex(xs12 align-end flexbox)
-      v-card-title
-        div
-          h3.headline.mb-0.black--text(v-text="product.name")
-          div {{ product.description }}
-      v-card-actions.white
-        v-spacer
-        v-btn(icon)
-          //- v-icon favorite
-          v-icon(icon) {{ Math.random() > 0.5? "add_shopping_cart" : "remove_shopping_cart"}}
-        v-btn(icon)
-          v-icon bookmark
-        v-btn(icon)
-          v-icon share
+  v-layout
+    v-flex(xs12)
+      v-card
+        v-card.lowkey_link(:to="{ name:'products-slug', params: { slug: product.slug }}", :nuxt="true").elevation-0
+          v-card-media(:src="product.main_img_url" height="200px")
+            v-container(fill-height fluid)
+              v-layout(fill-height)
+                v-flex(xs12 align-end flexbox)
+          v-card-title
+            div
+              h3.headline.mb-0(v-text="product.name")
+              //- .black--text
+              div {{ product.description }}
+        v-card.elevation-0
+          v-card-actions
+            v-spacer
+            add-remove-buttons(:product="product")
+            v-btn(icon)
+              v-icon bookmark
+            v-btn(icon)
+              v-icon share
 </template>
 
 
 <script>
+  import {
+    mapMutations,
+    mapState,
+    mapActions,
+  } from 'vuex'
 
-    export default {
-      props: {
-        product: {
-          required: true,
-          type: Object
-        }
+  import AddRemoveButtons from '~/components/inquiries/AddRemoveButtons.vue'
+  export default {
+    props: {
+      product: {
+        required: true,
+        type: Object
       }
+    },
+    components: {
+      AddRemoveButtons
     }
+  }
 
 </script>
 
