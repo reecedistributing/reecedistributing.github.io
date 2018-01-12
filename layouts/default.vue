@@ -28,9 +28,10 @@
     v-toolbar(:dark="$store.state.dark").elevation-0
       nuxt-link.lowkey_link(:to="{ path:'/' }" tag="v-toolbar-title")
         //- .grey--text.text--darken-2
-        v-avatar(v-if="!desktop")
-          img(src="~/assets/flame_logo.svg", style="filter:lighten(10%)")
-        span(v-if="desktop" style="font-family: 'Great Vibes', cursive; font-size:2rem;") Reece Distributing
+        v-layout(v-if="desktop")
+          img(src="~/assets/logo.svg", style="height: 5rem;", alt="Reece Distributing")     
+        v-avatar(v-else)
+          img(src="~/assets/logo-sml.svg", style="filter:lighten(10%)", alt="Reece Distributing")
       v-spacer
       v-toolbar-items()
       
@@ -123,9 +124,7 @@
         //-     v-btn(icon)
         //-       v-icon settings
     nuxt
-    v-footer.black.lighten-4.white--text.pa-3
-      v-spacer
-      div © Reece Distributing Inc. {{ new Date().getFullYear() }}
+    custom-footer
 
 </template>
 
@@ -133,6 +132,7 @@
 import Vue from 'vue'
 import { mapActions, mapState, mapGetters } from 'vuex'
 import Current from '~/components/inquiries/Current.vue'
+import CustomFooter from '~/components/global/Footer.vue'
 export default {
   data: _ => {
     return {
@@ -185,7 +185,8 @@ export default {
     if(process.browser) window.THAT = this
   },
   components: {
-    Current
+    Current,
+    CustomFooter
   }
 }
 </script>

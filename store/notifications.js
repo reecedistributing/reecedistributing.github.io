@@ -7,7 +7,7 @@ export default {
   }),
 
   actions: {
-    notify ({ state }, { text, color = 'primary', duration = 1000, multiline = false }) {
+    notify ({ state }, { text, color = 'info', duration = 1000, multiline = false }) {
       let notif = {
         text,
         color,

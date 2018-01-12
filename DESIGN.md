@@ -1,0 +1,1 @@
+- Changed "View Catalog" to "Explore Catalog"

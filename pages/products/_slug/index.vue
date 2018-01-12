@@ -78,12 +78,14 @@ v-container
                   v-if="!product.categories.length"
                 )
                   span None
-                component(v-if="product.price_low")
-                  p Minimum Price
-                  p ${{product.price_low.toFixed(2).toString() || '0.00'}}
-                component(v-if="product.price_high")
-                  p Maximum Price
-                  p ${{product.price_high.toFixed(2).toString() || '0.00'}}
+                v-divider
+                p.mt-3 Contact Us for Pricing
+                //- component(v-if="product.price_low")
+                //-   p Minimum Price
+                //-   p ${{product.price_low.toFixed(2).toString() || '0.00'}}
+                //- component(v-if="product.price_high")
+                //-   p Maximum Price
+                //-   p ${{product.price_high.toFixed(2).toString() || '0.00'}}
         v-layout(row wrap)
         v-dialog(v-model="deleteConfirmDialog", :fullscreen="$vuetify.breakpoint.xsOnly")
           v-card

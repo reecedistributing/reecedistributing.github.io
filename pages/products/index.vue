@@ -60,7 +60,7 @@
 
       //- TABLE/GRID SWITCHES
       v-tabs-bar
-        v-tabs-slider(color="yellow")
+        v-tabs-slider(color="accent")
         v-tabs-item(
           :nuxt="true"
           v-for="(val, key) in views"
@@ -85,7 +85,7 @@
               v-if="$vuetify.breakpoint.smAndUp"
               xs3
             ).mt-4
-              v-card(flat).accent.pl-0.mt-4
+              v-card(flat).secondary.pl-0.mt-4
                 v-card-text
                   v-card.floating-card-custom.mb-1.pa-3
                     v-card-text
@@ -100,11 +100,11 @@
                         v-list-tile
                           v-list-tile-content
                             v-list-tile-title Price
-                            v-list-tile-sub-title Set the content filtering level to restrict apps that can be downloaded
+                            v-list-tile-sub-title Set the content filtering level to only include products in your price range
                         v-list-tile
                           v-list-tile-content
-                            v-list-tile-title Password
-                            v-list-tile-sub-title Require password for purchase or use password to restrict purchase
+                            v-list-tile-title Category
+                            v-list-tile-sub-title Filter by category
                     
             v-flex(sm9, xs12)
               component(

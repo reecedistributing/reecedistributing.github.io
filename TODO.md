@@ -26,19 +26,31 @@
 - [X] Fix Product Sort
 
 - [] Inquiries
-  - [] Create Inqs
+  - [X] Create Inqs
     <!-- Inqs are created one-at-a-time, by adding and removing products, and ultimately submitting the inquiry -->
     - [] Fetch un-sent inquries immediately on mount
-    - [] Dynamically show add/remove buttons on products depending on if they are in the inquiry
-    - [] Add/Remove products accordingly w/ button
+    - [X] Dynamically show add/remove buttons on products depending on if they are in the inquiry
+    - [X] Add/Remove products accordingly w/ button
     - [] Pop up info box below `Inquiries` Tab when product is added w/ 5 second expiration reminding user that they can submit the inquiry when ready.
     - [] Inquiry Submit Form
       - [] Pre-filled Title input in the format of `<COMPANY-NAME>--<DATE>`
-      - [] List component of Products
-        - [] Ability to add/remove products from this view
-      - [] Questions/Comments field w/ label "Please include any questions or comments concerning this inquiry below."
+      - [X] List component of Products
+        - [X] Ability to add/remove products from this view
+      - [X] Questions/Comments field w/ label "Please include any questions or comments concerning this inquiry below."
 - [] Static Pages
   - [] Contact Us
   - [] About Us
   - [] FAQ's
   - [] Help
+
+
+  Contact Info:
+    - 208 452 5785
+    - INC
+    - Proudly Serving YOu
+    - 1973
+    - ID O NV UT WY SD ND MT CO
+
+- Gloves all tuffwear
+
+- Blinking D3 Map animation on home page

@@ -25,13 +25,19 @@ module.exports = {
     path: '/sitemap.xml',
     hostname: 'https://reecedistributing.com',
     cacheTime: 1000 * 60 * 15,
-    generate: false, // Enable me when using nuxt generate
+    generate: true, // Enable me when using nuxt generate
     exclude: [
       '/secret',
       '/admin/**',
       '/products/new'
     ],
     routes: [
+      {
+        url: '/page/2',
+        changefreq: 'daily',
+        priority: 1
+      },
+      '/'
       // '/page/1',
       // {
       //   url: '/page/2',
