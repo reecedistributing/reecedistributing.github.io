@@ -107,14 +107,15 @@
                             v-list-tile-sub-title Filter by category
                     
             v-flex(sm9, xs12)
-              component(
-                :is="val", 
-                :products="products", 
-                :loading="loading", 
-                :initial_sort_attr="sortBy.attribute",
-                :initial_sort_ascending="sortBy.ascending"
-                @sort="updateRouteWithSortParams"
-              )
+              keep-alive
+                component(
+                  :is="val", 
+                  :products="products", 
+                  :loading="loading", 
+                  :initial_sort_attr="sortBy.attribute",
+                  :initial_sort_ascending="sortBy.ascending"
+                  @sort="updateRouteWithSortParams"
+                )
 
       //- PAGINATION
       v-container

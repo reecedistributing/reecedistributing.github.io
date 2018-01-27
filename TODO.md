@@ -6,7 +6,11 @@
     - [X] Get brands & categories to reload their entire queries every time
     - [X] Get categories to create
     - [X] Get images to create
+    - [] Child Categories
+      - [] Right Click the category's chip in the select input
   - [X] Require that min price is less than max price 
+
+- [] Remove Prices (per request from meeting)
 
 - [] Fix/complete search/filter mechanisms for products
   - [] Search by category
@@ -19,7 +23,7 @@
 - [] Fix main Mobile Nav
 
   - [X] product delete confirmation
-    - [X] "delete" button opens confirmation dialog.
+    - [X] "delete" button opens confirmation dialog
     - [X] "Yes, I'm sure" button deletes product
     - [X] dialog closes
 
@@ -39,10 +43,12 @@
       - [X] Questions/Comments field w/ label "Please include any questions or comments concerning this inquiry below."
 - [] Static Pages
   - [] Contact Us
+    - [] Replace example email with real one
   - [] About Us
   - [] FAQ's
   - [] Help
 
+- [] Resize Background image so it's not 12 MB
 
   Contact Info:
     - 208 452 5785

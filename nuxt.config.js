@@ -5,6 +5,7 @@ module.exports = {
   head: {
     title: 'reece-distributing-web-catalog',
     meta: [
+      { name: 'format-detection', content: 'telephone=no' }, // turns of iOS style overrides of phone links
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: 'A client for the Reece Distributing Web Catalog' }
@@ -64,8 +65,8 @@ module.exports = {
     /*
     ** Run ESLint on save
     */
-    extend (config, ctx) {
-      if (ctx.dev && ctx.isClient) {
+    extend(config, ctx) {
+      if (ctx.isDev && ctx.isClient) {
         // config.module.rules.push({
         //   enforce: 'pre',
         //   test: /\.(js|vue)$/,

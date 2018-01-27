@@ -4,6 +4,31 @@ export const CATEGORY_QUERY_PARAMS = `
   name
   description
   slug
+  children {
+    name
+    description
+    slug
+    children {
+      name
+      description
+      slug
+      children {
+        name
+        description
+        slug
+        children {
+          name
+          description
+          slug
+        }
+      }
+    }
+  }
+  parent {
+    name
+    description
+    slug
+  }
 `
 
 export const BRAND_QUERY_PARAMS = `
@@ -14,8 +39,6 @@ export const BRAND_QUERY_PARAMS = `
 export const PRODUCT_QUERY_PARAMS = `
   name
   description
-  price_high
-  price_low
   slug
   created_at
   updated_at
@@ -54,8 +77,6 @@ export const PRODUCT_BY_PAGE = gql`query getProductPage($size:Int!, $num:Int!, $
     products {
       name
       description
-      price_high
-      price_low
       slug
       brands {
         ${BRAND_QUERY_PARAMS}

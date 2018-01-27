@@ -5,7 +5,7 @@
   )
     v-text-field(
       label="Parent Category",
-      v-model="value.parent"
+      v-model="value.parent.name"
       disabled
       v-if="value.parent"
       @input="updateInput"

@@ -11,14 +11,14 @@ v-layout(justify-center="")
         hide-actions
       )
         //- v-bind:pagination.sync="pagination"
-        template(slot="headerCell", scope="props")
+        template(slot="headerCell", slot-scope="props")
           v-tooltip(bottom="")
             span(slot="activator")
               | {{ props.header.text }}
             span
               | {{ props.header.text }}
             v-divider
-        template(slot="items", scope="props")
+        template(slot="items", slot-scope="props")
           td.text-xs-right(v-for="header in headers") 
             nuxt-link.lowkey_link(:to="{ name:'products-slug', params: { slug: props.item.slug }}" tag="div") 
               | {{ header.render ? header.render(props.item[header.value]) : props.item[header.value] }}
@@ -41,8 +41,8 @@ v-layout(justify-center="")
         headers: [
           { text: 'name', value: 'name' },
           { text: 'description', value: 'description'},
-          { text: 'Min Price', value: 'price_low', render: v => v ? '$' + v : "None" },
-          { text: 'Max Price', value: 'price_high', render: v => v ? '$' + v : "None" },
+          // { text: 'Min Price', value: 'price_low', render: v => v ? '$' + v : "None" },
+          // { text: 'Max Price', value: 'price_high', render: v => v ? '$' + v : "None" },
           { text: 'Created (Date)', value: 'created_at', render: v => new Date(parseInt(v)).toLocaleDateString() },
           { text: 'Updated (Date)', value: 'updated_at', render: v => new Date(parseInt(v)).toLocaleDateString() }
         ]
@@ -60,13 +60,13 @@ v-layout(justify-center="")
     },
     computed: {
       items () {
-        this.products.forEach(
-          p => {
-            let s = ( p.name + ' ' + p.description + ' ' + p.created_at)
-            let formattedString = s.toLowerCase().replace(/(\s)/g, '-')
-            console.log(formattedString)
-          }
-        )
+        // this.products.forEach(
+        //   p => {
+        //     let s = ( p.name + ' ' + p.description + ' ' + p.created_at)
+        //     let formattedString = s.toLowerCase().replace(/(\s)/g, '-')
+        //     console.log(formattedString)
+        //   }
+        // )
         return this.products
       }
     },

@@ -26,12 +26,7 @@
     //- NAVBAR
 
     v-toolbar(:dark="$store.state.dark").elevation-0
-      nuxt-link.lowkey_link(:to="{ path:'/' }" tag="v-toolbar-title")
-        //- .grey--text.text--darken-2
-        v-layout(v-if="desktop")
-          img(src="~/assets/logo.svg", style="height: 5rem;", alt="Reece Distributing")     
-        v-avatar(v-else)
-          img(src="~/assets/logo-sml.svg", style="filter:lighten(10%)", alt="Reece Distributing")
+      reece-logo
       v-spacer
       v-toolbar-items()
       
@@ -53,7 +48,7 @@
                 //- ACTIVATOR (IN NAV)
                 v-badge(
                   overlap 
-                  color="red" 
+                  color="accent" 
                   slot="activator"
                 )
                   span(slot="badge", v-if="productsInCurrentInquiry") {{ productsInCurrentInquiry }}
@@ -61,9 +56,11 @@
                     v-icon shopping_cart
                 current
         //- ACCOUNT AREA (RIGHT SIDE)
-        v-layout.mt-2
-          v-flex
-            v-btn(v-if="!user", :to="{ name:'auth-sign-in' }", :nuxt="true").accent.white--text.elevation-0 Sign In
+
+        //- SIGN IN REMOVED (most users will not need to sign in, so why present the option?)
+        //- v-layout.mt-2
+        //-   v-flex
+        //-     v-btn(v-if="!user", :to="{ name:'auth-sign-in' }", :nuxt="true").accent.white--text.elevation-0 Sign In
         v-layout.mt-2
           v-flex
             .text-xs-center
@@ -133,6 +130,7 @@ import Vue from 'vue'
 import { mapActions, mapState, mapGetters } from 'vuex'
 import Current from '~/components/inquiries/Current.vue'
 import CustomFooter from '~/components/global/Footer.vue'
+import ReeceLogo from '~/components/global/ReeceLogo.vue'
 export default {
   data: _ => {
     return {
@@ -181,12 +179,12 @@ export default {
     ]),
   },
   mounted () {
-    this.loadUserInfo()
     if(process.browser) window.THAT = this
   },
   components: {
     Current,
-    CustomFooter
+    CustomFooter,
+    ReeceLogo
   }
 }
 </script>

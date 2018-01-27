@@ -26,50 +26,46 @@ v-flex
               )
                 v-icon add
               span Create New Brand
-            deep-select(
-              label="Brands", 
-              v-model="value.brands", 
-              :items="brands",
-              ref="brandSelect"
-            )
-          v-layout.elevation-0.transparent
-            v-tooltip(top, right)
-              v-btn(
-                center, dark, fab, flat, small, color="accent", slot="activator"
-                @click="createCategory"
-              )
-                v-icon add
-              span Create New Category
+            //- deep-select(
+            //-   label="Brands", 
+            //-   v-model="value.brands", 
+            //-   :items="brands",
+            //-   ref="brandSelect"
+            //- )
+          v-layout.elevation-0.transparent 
             deep-select(
               label="Categories", 
-              v-model="value.categories", 
-              :items="categories",
-              ref="categorySelect"
+              :value="value.categories", 
+              :items="displayCategories",
+              ref="categorySelect",
+              sub-item-prop="children"
+              title-prop="name"
             )
-          v-text-field(
-            label="Minimum Price"
-            v-model="value.price_low"
-            prefix="$"
-            type="number"
-            min="0"
-            step="0.01"
-            :required="value.price_high != null"
-            :error-messages="priceErrors.minPrice"
-            @input="priceValidator"
-            @blur="priceValidator"
-          )
-            //- :max="value.price_high == null? 0 : value.price_high"
-          v-text-field(
-            label="Maximum Price"
-            v-model="value.price_high"
-            prefix="$"
-            type="number"
-            step="0.01"
-            :required="value.price_low != null"
-            :error-messages="priceErrors.maxPrice"
-            @input="priceValidator"
-            @blur="priceValidator"
-          )
+
+          //- v-text-field(
+          //-   label="Minimum Price"
+          //-   v-model="value.price_low"
+          //-   prefix="$"
+          //-   type="number"
+          //-   min="0"
+          //-   step="0.01"
+          //-   :required="value.price_high != null"
+          //-   :error-messages="priceErrors.minPrice"
+          //-   @input="priceValidator"
+          //-   @blur="priceValidator"
+          //- )
+          //-   //- :max="value.price_high == null? 0 : value.price_high"
+          //- v-text-field(
+          //-   label="Maximum Price"
+          //-   v-model="value.price_high"
+          //-   prefix="$"
+          //-   type="number"
+          //-   step="0.01"
+          //-   :required="value.price_low != null"
+          //-   :error-messages="priceErrors.maxPrice"
+          //-   @input="priceValidator"
+          //-   @blur="priceValidator"
+          //- )
             //- :min="value.price_low == null? 0 : value.price_low"
           image-upload(
             :thumbs="thumbs"
@@ -82,7 +78,7 @@ v-flex
         v-dialog(v-model="categoryFormVisible", max-width="50%")
           v-card 
             v-card-text
-              new-category(@create="handleCategorySubmit", v-if="categoryFormVisible")
+              new-category(@create="handleCategorySubmit", v-if="categoryFormVisible", :template="newCategory")
         v-dialog(v-model="brandFormVisible", max-width="50%")
           v-card 
             v-card-text
@@ -139,6 +135,7 @@ v-flex
           minPrice: [],
           maxPrice: []
         },
+        childCategories: [],
         categoryFormVisible: false,
         brandFormVisible: false,
         options: {
@@ -188,6 +185,16 @@ v-flex
     },
 
     computed: {
+      displayCategories () {
+        return this.categories.map(
+          c => {
+            let cCopy = {...c}
+            cCopy.parent_slug = cCopy.parent ? cCopy.parent.slug : null
+            return cCopy
+          }
+        )
+      },
+
       thumbs () {
         return this.value.images.map(
           img => img.url
@@ -228,6 +235,10 @@ v-flex
     },
     
     methods: {
+      loadChildCategories () {
+
+      },
+
       priceValidator () {
         this.$v.minPrice.$touch();
         this.$v.maxPrice.$touch();
@@ -257,8 +268,9 @@ v-flex
 
       },
 
-      createCategory () {
-        this.newCategory = { name: '', description: '', parent: null };
+      createCategory (parent) {
+        console.log(parent)
+        this.newCategory = { name: '', description: '', parent };
         this.categoryFormVisible = true;
       },
 

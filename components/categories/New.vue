@@ -1,6 +1,9 @@
 <template lang="pug">
   div
-    h4 New Category
+    h4
+      span(v-if="!category.parent") New Category
+      span(v-else) New Sub-Category for 
+        span.accent--text {{ category.parent.name }}
     category-form(@submit="onSubmit", :value="category")
 </template>
 

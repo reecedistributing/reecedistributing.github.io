@@ -24,6 +24,7 @@ let store = {
 
 const createStore = (...args) => {
   let vStore = new Vuex.Store(store)
+  if (process.browser) vStore.dispatch('auth/loadUserInfo')
   return vStore
 }
 

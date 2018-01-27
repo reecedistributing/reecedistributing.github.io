@@ -1,75 +1,40 @@
 <template lang="pug">
-v-layout
-  v-flex(xs12)
-    span(style="display:none;") Photo by Samuel Ferrara on Unsplash
-    v-layout.bg
-      v-flex(xs12).overlay-bg
-        div.overlay-contents
-          // <logo/>
-          img(src="~/assets/white-logo.svg", style="width:100%", alt="Reece Distributing")
-          //- h1.title-txt
-          //-   | Reece Distributing Co.
-          h2.subtitle
-            span For those who just can't bare it.
-          .links
-            v-btn(:nuxt="true", :to="{ name:'products' }", large).cta-btn Explore Catalog
-    .top-right-nav
-      div ––––
-      div ––––
-      div ––––
+  v-flex(column, xs10 offset-xs1, sm6 offset-sm3, justify-center align-center, style="height:100%")
+    .center-items--custom
+      h1.white--text.full-width--custom.ma-0.pa-0.h1--title--custom
+        img(:src="white_logo", style="width:100%", alt="Reece Distributing")
+      //- h1.title-txt
+      //-   | Reece Distributing Co. 
+      h2.subtitle
+        span For those who just can't bare it.
+      .links
+        v-btn(:nuxt="true", :to="{ name:'products' }", large).cta-btn Explore Catalog
+
     //- map-visual
 
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-// import MapVisual from '~/components/visual/Map.vue'
-import { mapGetters, mapState } from 'vuex'
+
+import white_logo from "~/assets/white-logo.svg"
 
 export default {
-  layout: 'home',
-  components: {
-    Logo,
-    // MapVisual
-  },
-  computed: {
-    ...mapGetters('auth', [
-      'isAuthenticated',
-    ]),
-    ...mapState('auth', [
-      'user'
-    ])
-  },
-  mounted(){
-  }
+  data: _ => ({ white_logo }),
+  layout: 'home'
 }
+
 </script>
 
 <style scoped lang="stylus">
 @require '../assets/colorconfig.styl'
 
-.bg {
-  position: relative;
-  background-image: url('https://source.unsplash.com/uOi3lg8fGl4');
-  background-size: cover;
-}
-.overlay-bg {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  height: 100vh;
-  background-color: rgba(0,0,0,0.5);
+.h1--title--custom {
+  font-size: inherit !important;
 }
 
-.title-txt {
-  font-family: 'Great Vibes', cursive;
-  display: block;
-  /* font-weight: bold; */
-  color:#FAFAFA;
-  letter-spacing: 0px !important;
+.full-width--custom {
+  width: 100%;
 }
-
 .subtitle {
   font-family: 'Cutive Mono', Arial, Helvetica, sans-serif;
   font-weight: 300;
@@ -79,19 +44,22 @@ export default {
   padding-bottom: 15px;
 }
 
-.top-right-nav {
-  display: block;
-  position: fixed;
-  top: 0px;
-  right: 0px;
-  padding: 10px 10px 0px 0px;
-}
 
 .links {
   padding-top: 15px;
 }
 
 .cta-btn {
-  border-bottom: 2px solid $main.darken-2;
+  border-bottom: 2px solid $red.darken-2;
+  // border-bottom-color: #e45e30;
+}
+
+.center-items--custom {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 </style>
