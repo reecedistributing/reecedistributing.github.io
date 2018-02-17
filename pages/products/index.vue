@@ -98,9 +98,9 @@
                       v-list(three-line="" subheader="")
                         v-subheader User Controls
                         v-list-tile
-                          v-list-tile-content
-                            v-list-tile-title Price
-                            v-list-tile-sub-title Set the content filtering level to only include products in your price range
+                          //- v-list-tile-content
+                          //-   v-list-tile-title Price
+                          //-   v-list-tile-sub-title Set the content filtering level to only include products in your price range
                         v-list-tile
                           v-list-tile-content
                             v-list-tile-title Category
@@ -156,11 +156,12 @@
       }
     },
     async asyncData({store, query}){
+      
       let { 
         page: pageNum = 1, 
         view: activeView = 'grid', 
         search = '',
-        sort_ascending: ascending = "false",
+        sort_ascending: ascending = 'false',
         sort_attribute: attribute = 'updated_at'
       } = query;
       ascending = JSON.parse(ascending)
@@ -168,10 +169,11 @@
         ascending,
         attribute
       }
-      pageNum = parseInt(pageNum)
-      let searchActive = !!search
-      let size = 15
+      pageNum = parseInt(pageNum);
+      let searchActive = !!search;
+      let size = 15;
       let { products, pagination: { pageCount } } = await store.dispatch('products/getProducts', { num: pageNum, size, search, orderBy: sortBy })
+      
       return {
         products,
         pageCount,

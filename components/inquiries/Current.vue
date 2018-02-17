@@ -10,9 +10,7 @@ v-card
       v-stepper-step(step="3") Notes and Questions
     v-stepper-items
       v-stepper-content(step="1")
-        mb-5(color="grey lighten-1")
-
-
+        .mb-5(color="grey lighten-1")
           v-list(three-line="" subheader="")
             v-subheader Products
             .body-2(v-if="!productCount").pa-3.grey--text.text--darken-2

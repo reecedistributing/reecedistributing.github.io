@@ -5,7 +5,7 @@
   "author": "mccallofthewild <mccallalexander96@gmail.com>",
   "private": true,
   "engines": {
-    "node": ">7 <9"
+    "node": ">6 <9"
   },
   "scripts": {
     "nuxt": "node_modules/.bin/nuxt",
@@ -25,11 +25,8 @@
     "apollo-client": "^2.0.1",
     "apollo-client-preset": "^1.0.1",
     "apollo-link-http": "^1.0.0",
-    "auth0-js": "^9.0.2",
-    "auth0-lock": "^11.0.1",
+    "auth0-lock": "^11.1.2",
     "axios": "^0.17.0",
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
     "cloudinary-core": "^2.3.0",
     "eventemitter3": "^3.0.0",
     "graphql": "^0.11.7",
@@ -37,20 +34,17 @@
     "js-cookie": "^2.2.0",
     "jwt-decode": "^2.2.0",
     "node-fetch": "^1.7.3",
-    "node-pre-gyp": "^0.6.39",
-    "node-sass": "^4.5.3",
-    "nuxt": "^1.1.1",
+    "nuxt": "^1.0.0-rc11",
     "pug": "^2.0.0-rc.4",
     "pug-loader": "^2.3.0",
     "sass-loader": "^6.0.6",
-    "uuid": "^3.1.0",
+    "vue": "^2.5.2",
     "vue-carousel": "^0.6.5",
     "vue-core-image-upload": "^2.3.10",
+    "vue-server-renderer": "^2.5.2",
+    "vue-template-compiler": "^2.5.2",
     "vuelidate": "^0.6.1",
-    "vuetify": "^0.16.9",
-    "vue": "2.3.4",
-    "vue-server-renderer": "2.3.4",
-    "vue-template-compiler": "2.3.4"
+    "vuetify": "^0.16.9"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
@@ -62,6 +56,7 @@
     "eslint-plugin-node": "^5.1.1",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
+    "node-sass": "^4.7.2",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1"
   },

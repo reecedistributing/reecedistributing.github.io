@@ -15,7 +15,6 @@ v-container
         v-flex(xs12 lg5)
           v-card 
             v-card-text
-              //- EDIT OR DELETE MENU 
               
               //- PRODUCT INFORMATION
               ._.ml-2.mt-2.mr-2
@@ -24,7 +23,8 @@ v-container
                     h3 {{product.name}} 
                   v-flex(xs1, justify-space-between, row).text-xs-right
                     v-spacer
-                    v-menu(bottom, left)
+                    //- EDIT OR DELETE MENU 
+                    v-menu(bottom, left, v-if="isAuthenticated")
                       v-btn(icon, slot="activator")
                         v-icon more_vert
                       v-list
@@ -104,7 +104,9 @@ v-container
 <script>
   import RouteBreadCrumbs from '~/components/global/RouteBreadCrumbs'
   import { Carousel, Slide } from 'vue-carousel';
+import { mapGetters } from 'vuex';
   export default {
+    layout: 'default',
     data () {
       return {
         product:{},
@@ -148,9 +150,12 @@ v-container
 
     computed: {
       browser () {
-        this.mounted
+        // this.mounted
         return process.browser;
-      }
+      },
+      ...mapGetters('auth', [
+        'isAuthenticated'
+      ])
     },
 
     mounted () {

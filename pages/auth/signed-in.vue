@@ -1,17 +1,27 @@
-<template>
-  <p>Signing in...</p>
+<template lang="pug">
+  .signed-in-container
+    v-progress-circular(indeterminate v-bind:size="200" v-bind:width="2" color="#FAFAFA")
+      | Loading...
 </template>
 
 <script>
-import { setToken, checkSecret, extractInfoFromHash } from '~/utils/auth'
+
 export default {
+  layout: 'home',
   mounted () {
-    const { token, secret } = extractInfoFromHash()
-    if (process.browser && !checkSecret(secret) || !token) {
-      console.error('Something happened with the Sign In request')
-    }
-    setToken(token)
-    this.$router.replace('/')
+    console.log(this.$route.query)
+    this.$router.replace('/products')
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  .signed-in-container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color:white;
+  }
+</style>

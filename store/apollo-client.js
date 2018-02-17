@@ -6,14 +6,15 @@ import fetch from 'node-fetch'
 import EventEmitter from 'eventemitter3'
 
 if (process.browser) {
-  window.fetch = fetch
+  window.fetch = window.fetch || fetch
 } else {
-  global.fetch = fetch
+  global.fetch = global.fetch || fetch
 }
 
 const GRAPHQL_URI = process.env.GRAPHQL_URI || 'http://localhost:8080/graphql'
+
 export const client = new ApolloClient({
-  // ssrMode: !process.browser,
+  ssrMode: !process.browser,
   link: new HttpLink({
     uri: GRAPHQL_URI
   }),
@@ -22,20 +23,34 @@ export const client = new ApolloClient({
   })
 })
 
-client.emitter = new EventEmitter()
+// client.emitter = new EventEmitter();
 
-const apolloQuery = client.query.bind(client)
-client.query = async (...args) => {
-  await client.cache.reset()
-  return apolloQuery(...args)
-}
+// let runCount = 0;
+// function overwriteApolloClientMethods () {
+//   if(runCount > 0) return;
+//   runCount++;
 
-const apolloMutation = client.mutate.bind(client)
-client.mutate = async (...args) => {
-  let rtnVal = await apolloMutation(...args)
-  client.emitter.emit('update')
-  return rtnVal
-}
+//   // const apolloQuery = CLIENT.query.bind(CLIENT);
+
+//   // CLIENT.query = async (...args) => {
+//   //   await CLIENT.cache.reset()
+//   //   return apolloQuery(...args)
+//   // }
+
+//   // const apolloMutation = CLIENT.mutate.bind(CLIENT)
+
+//   // CLIENT.mutate = async (...args) => {
+//   //   let rtnVal = await apolloMutation(...args)
+//   //   CLIENT.emitter.emit('update')
+//   //   return rtnVal
+//   // }
+
+// };
+// overwriteApolloClientMethods();
+
+
+
+
 
 export const query = (...args) => {
   return client.query({
@@ -49,3 +64,4 @@ export const mutate = (mutationTag, variables) => {
     variables
   })
 }
+

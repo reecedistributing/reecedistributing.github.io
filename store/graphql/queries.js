@@ -1,9 +1,6 @@
 import gql from 'graphql-tag'
 
-export const CATEGORY_QUERY_PARAMS = `
-  name
-  description
-  slug
+const EXTRA_CHILDREN = `
   children {
     name
     description
@@ -16,13 +13,19 @@ export const CATEGORY_QUERY_PARAMS = `
         name
         description
         slug
-        children {
-          name
-          description
-          slug
-        }
       }
     }
+  }
+`
+export const CATEGORY_QUERY_PARAMS = `
+  name
+  description
+  slug
+  children {
+    name
+    description
+    slug
+    ${EXTRA_CHILDREN}
   }
   parent {
     name

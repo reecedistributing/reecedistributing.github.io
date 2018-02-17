@@ -1,5 +1,5 @@
 <template lang="pug">
-v-layout(column)
+v-layout(column).container--product-grid
   v-flex(xs12)
     v-layout(row)
       v-flex(xs10 md6 offset-md3 justify-space-around).mt-4
@@ -125,8 +125,8 @@ v-layout(column)
       sortable: [
           { text: 'name', value: 'name' },
           { text: 'description', value: 'description' },
-          { text: 'Min Price', value: 'price_low', render: v => v ? '$' + v : "None" },
-          { text: 'Max Price', value: 'price_high', render: v => v ? '$' + v : "None" },
+          // { text: 'Min Price', value: 'price_low', render: v => v ? '$' + v : "None" },
+          // { text: 'Max Price', value: 'price_high', render: v => v ? '$' + v : "None" },
           { text: 'Created (Date)', value: 'created_at', render: v => new Date(parseInt(v)).toLocaleDateString() },
           { text: 'Updated (Date)', value: 'updated_at', render: v => new Date(parseInt(v)).toLocaleDateString() }
         ]
@@ -188,4 +188,8 @@ v-layout(column)
 
 
 <style lang="scss">
+  .container--product-grid {
+    height:100%;
+    overflow-y: scroll;
+  }
 </style>

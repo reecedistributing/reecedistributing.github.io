@@ -102,39 +102,39 @@ v-flex
     mixins: [validationMixin],
 
     validations: {
-      minPrice: {
-        required: requiredIf(
-          nestedModel => {
-            return this.minOrMaxPriceEntered;
-          }
-        ),
-        maxValue: maxValue(
-          nestedModel => {
-            return this.value.price_high
-          }
-        )
-      },
-      maxPrice: { 
-        required: requiredIf(
-          nestedModel => {
-            return this.minOrMaxPriceEntered;
-          }
-        ),
-        minValue: minValue(
-          nestedModel => {
-            return this.value.price_low
-          }
-        )
-      },
+      // minPrice: {
+      //   required: requiredIf(
+      //     nestedModel => {
+      //       return this.minOrMaxPriceEntered;
+      //     }
+      //   ),
+      //   maxValue: maxValue(
+      //     nestedModel => {
+      //       return this.value.price_high
+      //     }
+      //   )
+      // },
+      // maxPrice: { 
+      //   required: requiredIf(
+      //     nestedModel => {
+      //       return this.minOrMaxPriceEntered;
+      //     }
+      //   ),
+      //   minValue: minValue(
+      //     nestedModel => {
+      //       return this.value.price_low
+      //     }
+      //   )
+      // },
     },
 
     data: _ => ({
         brandRefTag: 'brandDialog',
         categoryRefTag: 'categoryDialog',
-        priceErrors: {
-          minPrice: [],
-          maxPrice: []
-        },
+        // priceErrors: {
+        //   minPrice: [],
+        //   maxPrice: []
+        // },
         childCategories: [],
         categoryFormVisible: false,
         brandFormVisible: false,
@@ -171,8 +171,8 @@ v-flex
             name: '',
             description: '',
             images: [],
-            price_high: null,
-            price_low: null,
+            // price_high: null,
+            // price_low: null,
             brands: [],
             categories: []
           }
@@ -204,33 +204,33 @@ v-flex
         let config = this.$store.state.images.cloudinary.config
         return config
       },
-      minOrMaxPriceEntered () {
-        if (window) {
-          window.STORE = this.$store
-        }
-        let price_low = this.value.price_low;
-        let price_high = this.value.price_high;
-        let areEqual = price_high == price_low;
-        let bothZero = areEqual && ( price_high == 0 );
-        let bothNull = areEqual && ( price_high == null );
-        let bothFalsey = (!!price_high && !!price_low) && (!!price_high == false);
-        let oneFalsey = (!!price_high) != (!!price_low)
-        if (bothFalsey) {
-          this.value.price_high = null;
-          this.value.price_low = null;
-        }
-        if (oneFalsey) {
-          switch (false) {
-            case !!price_high :
-              this.value.price_high = 0;
-              break;
-            case !!price_low :
-              this.value.price_low = 0;
-              break;
-          }
-        }
-        return !bothZero && !bothNull
-      },
+      // minOrMaxPriceEntered () {
+      //   if (window) {
+      //     window.STORE = this.$store
+      //   }
+      //   let price_low = this.value.price_low;
+      //   let price_high = this.value.price_high;
+      //   let areEqual = price_high == price_low;
+      //   let bothZero = areEqual && ( price_high == 0 );
+      //   let bothNull = areEqual && ( price_high == null );
+      //   let bothFalsey = (!!price_high && !!price_low) && (!!price_high == false);
+      //   let oneFalsey = (!!price_high) != (!!price_low)
+      //   if (bothFalsey) {
+      //     this.value.price_high = null;
+      //     this.value.price_low = null;
+      //   }
+      //   if (oneFalsey) {
+      //     switch (false) {
+      //       case !!price_high :
+      //         this.value.price_high = 0;
+      //         break;
+      //       case !!price_low :
+      //         this.value.price_low = 0;
+      //         break;
+      //     }
+      //   }
+      //   return !bothZero && !bothNull
+      // },
 
     },
     
@@ -239,26 +239,26 @@ v-flex
 
       },
 
-      priceValidator () {
-        this.$v.minPrice.$touch();
-        this.$v.maxPrice.$touch();
-        this.setPriceErrors();
-      },
-      setPriceErrors () {
-        console.log('priceErrors')
-        const errors = {
-          minPrice: [],
-          maxPrice: []
-        }
-        if (!this.$v.maxPrice.$dirty && !this.$v.minPrice.$dirty) return errors
+      // priceValidator () {
+      //   this.$v.minPrice.$touch();
+      //   this.$v.maxPrice.$touch();
+      //   this.setPriceErrors();
+      // },
+      // setPriceErrors () {
+      //   console.log('priceErrors')
+      //   const errors = {
+      //     minPrice: [],
+      //     maxPrice: []
+      //   }
+      //   if (!this.$v.maxPrice.$dirty && !this.$v.minPrice.$dirty) return errors
 
-        if ( this.minOrMaxPriceEntered && !(this.value.price_high > this.value.price_low) ) {
-          console.log(this.value.price_high, this.value.price_low)
-        if (this.$v.maxPrice.$dirty) errors.maxPrice.push('Maximum Price must be greater than Minimum Price!')
-        if (this.$v.minPrice.$dirty) errors.minPrice.push('Minimum Price must be less than Maximum Price!')
-        }
-        this.priceErrors = errors
-      },
+      //   if ( this.minOrMaxPriceEntered && !(this.value.price_high > this.value.price_low) ) {
+      //     console.log(this.value.price_high, this.value.price_low)
+      //   if (this.$v.maxPrice.$dirty) errors.maxPrice.push('Maximum Price must be greater than Minimum Price!')
+      //   if (this.$v.minPrice.$dirty) errors.minPrice.push('Minimum Price must be less than Maximum Price!')
+      //   }
+      //   this.priceErrors = errors
+      // },
 
       onSubmit (event) {
         this.$emit('complete', { event, product: this.value })

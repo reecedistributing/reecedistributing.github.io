@@ -21,6 +21,7 @@ v-container
   import ProductForm from '~/components/products/Form.vue'
 
   export default {
+    middleware: 'auth',
     data: _ => ({
       product: undefined
     }),

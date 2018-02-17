@@ -6,7 +6,8 @@
 import { mapState, mapActions } from 'vuex'
 
 export default {
-  middleware: 'anonymous',
+  layout: 'home',
+  // middleware: 'anonymous',
   computed: {
     ...mapState('auth', [
       'AUTH0_COMPONENT_ID'

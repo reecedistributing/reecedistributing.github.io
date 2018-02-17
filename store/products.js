@@ -120,7 +120,6 @@ export default {
           search
         }
       })
-
       products = products.map(
         (p, i) => {
           p = {...p}
