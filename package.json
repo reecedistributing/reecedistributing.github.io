@@ -11,7 +11,7 @@
     "nuxt": "node_modules/.bin/nuxt",
     "dev": "nuxt",
     "dev-debug": "node_modules/.bin/nuxt --inspect",
-    "build1": "nuxt build",
+    "build": "nuxt build",
     "start": "PORT=$PORT nuxt start",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
