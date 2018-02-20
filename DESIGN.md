@@ -1,2 +1,0 @@
-- Changed "View Catalog" to "Explore Catalog"
-- Added red bottom border to CTA Button
